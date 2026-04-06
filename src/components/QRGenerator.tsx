@@ -267,6 +267,10 @@ export default function QRGenerator() {
   const [svgString, setSvgString] = useState("");
   const [showCustomize, setShowCustomize] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch for portal-based components
+  useEffect(() => { setMounted(true); }, []);
 
   const handleFieldChange = useCallback((name: string, value: string) => {
     setFields((prev) => ({ ...prev, [name]: value }));
@@ -355,26 +359,28 @@ export default function QRGenerator() {
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-background">
-        {/* Command palette */}
-        <CommandDialog open={cmdOpen} onOpenChange={setCmdOpen}>
-          <CommandInput placeholder="Search QR type..." />
-          <CommandList>
-            <CommandEmpty>No type found.</CommandEmpty>
-            <CommandGroup heading="QR Types">
-              {QR_TYPES.map((t) => (
-                <CommandItem
-                  key={t.id}
-                  onSelect={() => { setActiveType(t.id); setCmdOpen(false); }}
-                  className="gap-2"
-                >
-                  <t.Icon className="w-4 h-4" />
-                  {t.label}
-                  {activeType === t.id && <Badge variant="secondary" className="ml-auto text-[10px]">Active</Badge>}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </CommandDialog>
+        {/* Command palette - only render after mount to avoid hydration mismatch */}
+        {mounted && (
+          <CommandDialog open={cmdOpen} onOpenChange={setCmdOpen}>
+            <CommandInput placeholder="Search QR type..." />
+            <CommandList>
+              <CommandEmpty>No type found.</CommandEmpty>
+              <CommandGroup heading="QR Types">
+                {QR_TYPES.map((t) => (
+                  <CommandItem
+                    key={t.id}
+                    onSelect={() => { setActiveType(t.id); setCmdOpen(false); }}
+                    className="gap-2"
+                  >
+                    <t.Icon className="w-4 h-4" />
+                    {t.label}
+                    {activeType === t.id && <Badge variant="secondary" className="ml-auto text-[10px]">Active</Badge>}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </CommandDialog>
+        )}
 
         {/* Header */}
         <header className="border-b border-border">
@@ -401,19 +407,21 @@ export default function QRGenerator() {
               </Tooltip>
 
               {/* Customize sheet trigger (mobile) */}
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="sm" className="sm:hidden gap-1.5">
-                    <PaletteIcon className="w-3.5 h-3.5" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right" className="w-80">
-                  <SheetHeader>
-                    <SheetTitle>Customize</SheetTitle>
-                  </SheetHeader>
-                  <CustomizePanel options={options} setOptions={setOptions} />
-                </SheetContent>
-              </Sheet>
+              {mounted && (
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" size="sm" className="sm:hidden gap-1.5">
+                      <PaletteIcon className="w-3.5 h-3.5" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="right" className="w-80">
+                    <SheetHeader>
+                      <SheetTitle>Customize</SheetTitle>
+                    </SheetHeader>
+                    <CustomizePanel options={options} setOptions={setOptions} />
+                  </SheetContent>
+                </Sheet>
+              )}
 
               <Separator orientation="vertical" className="h-4 hidden sm:block" />
 
