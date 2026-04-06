@@ -1,22 +1,21 @@
 import { useState, useEffect, useCallback } from "react";
 import QRCode from "qrcode";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   LinkIcon, WifiIcon, PhoneIcon, EmailIcon,
   SmsIcon, UserIcon, TextIcon, DownloadIcon,
   PaletteIcon, HeartIcon, QrIcon,
   ClipboardIcon, ShareIcon, ContactBookIcon, CheckIcon,
+  ChevronDownIcon,
 } from "./icons";
 
 type IconComponent = React.ComponentType<{ className?: string }>;
@@ -57,12 +56,10 @@ function buildQRData(type: QRType, fields: Record<string, string>): string {
     case "text": return fields.text || "";
     case "phone": return `tel:${fields.phone || ""}`;
     case "email": {
-      const parts = [`mailto:${fields.emailAddress || ""}`];
       const params: string[] = [];
       if (fields.subject) params.push(`subject=${encodeURIComponent(fields.subject)}`);
       if (fields.body) params.push(`body=${encodeURIComponent(fields.body)}`);
-      if (params.length > 0) parts.push(params.join("&"));
-      return parts.join("?");
+      return `mailto:${fields.emailAddress || ""}${params.length ? "?" + params.join("&") : ""}`;
     }
     case "sms": {
       const base = `sms:${fields.smsPhone || ""}`;
@@ -71,11 +68,9 @@ function buildQRData(type: QRType, fields: Record<string, string>): string {
     case "wifi":
       return `WIFI:T:${fields.encryption || "WPA"};S:${fields.ssid || ""};P:${fields.wifiPassword || ""};H:${fields.hidden === "true" ? "true" : "false"};;`;
     case "vcard": {
-      const lines = [
-        "BEGIN:VCARD", "VERSION:3.0",
+      const lines = ["BEGIN:VCARD", "VERSION:3.0",
         `N:${fields.lastName || ""};${fields.firstName || ""};;;`,
-        `FN:${(fields.firstName || "") + " " + (fields.lastName || "")}`.trim(),
-      ];
+        `FN:${(fields.firstName || "") + " " + (fields.lastName || "")}`.trim()];
       if (fields.vcardPhone) lines.push(`TEL:${fields.vcardPhone}`);
       if (fields.vcardEmail) lines.push(`EMAIL:${fields.vcardEmail}`);
       if (fields.org) lines.push(`ORG:${fields.org}`);
@@ -142,9 +137,9 @@ function Field({ label, name, value, onChange, type = "text", placeholder, texta
         {showPaste && <PasteButton onPaste={(text) => onChange(name, text)} />}
       </div>
       {textarea ? (
-        <Textarea id={name} name={name} value={value} onChange={(e) => onChange(name, e.target.value)} placeholder={placeholder} rows={3} className="bg-muted/50 border-border/30 focus:border-foreground/20" />
+        <Textarea id={name} value={value} onChange={(e) => onChange(name, e.target.value)} placeholder={placeholder} rows={3} className="bg-muted/30 border-border/20" />
       ) : (
-        <Input id={name} name={name} type={type} value={value} onChange={(e) => onChange(name, e.target.value)} placeholder={placeholder} className="bg-muted/50 border-border/30 focus:border-foreground/20" />
+        <Input id={name} type={type} value={value} onChange={(e) => onChange(name, e.target.value)} placeholder={placeholder} className="bg-muted/30 border-border/20" />
       )}
     </div>
   );
@@ -153,28 +148,28 @@ function Field({ label, name, value, onChange, type = "text", placeholder, texta
 // --- Type Fields ---
 function TypeFields({ type, fields, onChange }: { type: QRType; fields: Record<string, string>; onChange: (name: string, value: string) => void }) {
   switch (type) {
-    case "url": return <Field label="Destination Link" name="url" value={fields.url || ""} onChange={onChange} placeholder="https://example.com" showPaste />;
-    case "text": return <Field label="Content" name="text" value={fields.text || ""} onChange={onChange} placeholder="Enter your text here..." textarea showPaste />;
+    case "url": return <Field label="Destination URL" name="url" value={fields.url || ""} onChange={onChange} placeholder="https://example.com" showPaste />;
+    case "text": return <Field label="Content" name="text" value={fields.text || ""} onChange={onChange} placeholder="Enter your text..." textarea showPaste />;
     case "phone": return <Field label="Phone Number" name="phone" value={fields.phone || ""} onChange={onChange} type="tel" placeholder="+1 234 567 8900" showPaste />;
     case "email":
-      return (<div className="space-y-4">
+      return (<div className="space-y-3">
         <Field label="Email Address" name="emailAddress" value={fields.emailAddress || ""} onChange={onChange} type="email" placeholder="hello@example.com" showPaste />
         <Field label="Subject" name="subject" value={fields.subject || ""} onChange={onChange} placeholder="Optional subject" />
-        <Field label="Body" name="body" value={fields.body || ""} onChange={onChange} placeholder="Optional message body" textarea />
+        <Field label="Body" name="body" value={fields.body || ""} onChange={onChange} placeholder="Optional body" textarea />
       </div>);
     case "sms":
-      return (<div className="space-y-4">
+      return (<div className="space-y-3">
         <Field label="Phone Number" name="smsPhone" value={fields.smsPhone || ""} onChange={onChange} type="tel" placeholder="+1 234 567 8900" showPaste />
         <Field label="Message" name="smsBody" value={fields.smsBody || ""} onChange={onChange} placeholder="Optional message" textarea />
       </div>);
     case "wifi":
-      return (<div className="space-y-4">
+      return (<div className="space-y-3">
         <Field label="Network Name (SSID)" name="ssid" value={fields.ssid || ""} onChange={onChange} placeholder="MyWiFiNetwork" />
         <Field label="Password" name="wifiPassword" value={fields.wifiPassword || ""} onChange={onChange} type="password" placeholder="Network password" />
         <div className="space-y-2">
           <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Encryption</Label>
           <Select value={fields.encryption || "WPA"} onValueChange={(v) => onChange("encryption", v)}>
-            <SelectTrigger className="bg-muted/50 border-border/30"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="bg-muted/30 border-border/20"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="WPA">WPA/WPA2</SelectItem>
               <SelectItem value="WEP">WEP</SelectItem>
@@ -188,7 +183,7 @@ function TypeFields({ type, fields, onChange }: { type: QRType; fields: Record<s
         </label>
       </div>);
     case "vcard":
-      return (<div className="space-y-4">
+      return (<div className="space-y-3">
         <ContactPickerButton onChange={onChange} />
         <div className="grid grid-cols-2 gap-3">
           <Field label="First Name" name="firstName" value={fields.firstName || ""} onChange={onChange} placeholder="John" />
@@ -202,15 +197,22 @@ function TypeFields({ type, fields, onChange }: { type: QRType; fields: Record<s
   }
 }
 
-// --- Main ---
+// --- Settings icon ---
+function SettingsIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+    </svg>
+  );
+}
+
+// === Main ===
 export default function QRGenerator() {
   const [activeType, setActiveType] = useState<QRType>("url");
-  const [fields, setFields] = useState<Record<string, string>>({ url: "https://example.com" });
-  const [options, setOptions] = useState<QROptions>({ fgColor: "#ffffff", bgColor: "#09090b", size: 280, errorCorrection: "M" });
+  const [fields, setFields] = useState<Record<string, string>>({ url: "" });
+  const [options, setOptions] = useState<QROptions>({ fgColor: "#ffffff", bgColor: "#09090b", size: 300, errorCorrection: "M" });
   const [qrDataUrl, setQrDataUrl] = useState("");
   const [svgString, setSvgString] = useState("");
-  const [showCustomize, setShowCustomize] = useState(false);
-  const [cmdOpen, setCmdOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
@@ -220,12 +222,6 @@ export default function QRGenerator() {
   }, []);
 
   const qrData = buildQRData(activeType, fields);
-
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === "k" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); setCmdOpen((o) => !o); } };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, []);
 
   useEffect(() => {
     if (!qrData) { setQrDataUrl(""); setSvgString(""); return; }
@@ -244,8 +240,7 @@ export default function QRGenerator() {
     if (!qrData) return;
     if (format === "svg") {
       const b = new Blob([svgString], { type: "image/svg+xml" });
-      const u = URL.createObjectURL(b);
-      const a = document.createElement("a"); a.href = u; a.download = `qrzap-${activeType}.svg`; a.click(); URL.revokeObjectURL(u);
+      const u = URL.createObjectURL(b); const a = document.createElement("a"); a.href = u; a.download = `qrzap-${activeType}.svg`; a.click(); URL.revokeObjectURL(u);
       return;
     }
     const c = document.createElement("canvas"); c.width = options.size * 2; c.height = options.size * 2;
@@ -260,8 +255,8 @@ export default function QRGenerator() {
     try {
       const r = await fetch(qrDataUrl); const b = await r.blob();
       const f = new File([b], `qrzap-${activeType}.png`, { type: "image/png" });
-      if (navigator.canShare?.({ files: [f] })) { await navigator.share({ title: "QR Code from QRzap", files: [f] }); }
-      else { await navigator.share({ title: "QR Code from QRzap", url: window.location.href }); }
+      if (navigator.canShare?.({ files: [f] })) await navigator.share({ title: "QR Code from QRzap", files: [f] });
+      else await navigator.share({ title: "QR Code from QRzap", url: window.location.href });
     } catch { /* cancelled */ }
   }, [qrDataUrl, activeType]);
 
@@ -270,218 +265,131 @@ export default function QRGenerator() {
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-background flex flex-col">
-        {/* Command Palette */}
-        {mounted && (
-          <CommandDialog open={cmdOpen} onOpenChange={setCmdOpen}>
-            <CommandInput placeholder="Search QR type..." />
-            <CommandList>
-              <CommandEmpty>No type found.</CommandEmpty>
-              <CommandGroup heading="QR Types">
-                {QR_TYPES.map((t) => (
-                  <CommandItem key={t.id} onSelect={() => { setActiveType(t.id); setCmdOpen(false); }} className="gap-2">
-                    <t.Icon className="w-4 h-4" />
-                    {t.label}
-                    {activeType === t.id && <Badge variant="secondary" className="ml-auto text-[10px]">Active</Badge>}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </CommandDialog>
-        )}
-
-        {/* Frosted Nav */}
+        {/* Nav */}
         <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-          <div className="flex items-center justify-between px-6 py-3 max-w-6xl mx-auto w-full">
-            <div className="flex items-center gap-8">
-              <a href="/" className="flex items-center gap-2">
-                <QrIcon className="w-5 h-5 text-foreground" />
-                <span className="text-lg font-semibold tracking-tighter">QRzap</span>
-              </a>
-              <div className="hidden md:flex gap-6 items-center">
-                <button onClick={() => setCmdOpen(true)} className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
-                  Quick Switch
-                  <kbd className="pointer-events-none inline-flex h-5 items-center gap-0.5 rounded border bg-muted px-1.5 font-mono text-[10px] text-muted-foreground">
-                    <span className="text-xs">&#8984;</span>K
-                  </kbd>
-                </button>
-              </div>
-            </div>
+          <div className="flex items-center justify-between px-5 py-3 max-w-3xl mx-auto w-full">
+            <a href="/" className="flex items-center gap-2">
+              <QrIcon className="w-5 h-5" />
+              <span className="text-base font-semibold tracking-tighter">QRzap</span>
+            </a>
             <div className="flex items-center gap-3">
-              {mounted && (
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <button className="sm:hidden text-muted-foreground hover:text-foreground transition-colors">
-                      <PaletteIcon className="w-5 h-5" />
-                    </button>
-                  </SheetTrigger>
-                  <SheetContent side="right" className="w-80">
-                    <SheetHeader><SheetTitle>Customize</SheetTitle></SheetHeader>
-                    <CustomizePanel options={options} setOptions={setOptions} />
-                  </SheetContent>
-                </Sheet>
-              )}
-              <a href="/docs" className="text-sm text-muted-foreground hover:text-foreground transition-colors">API</a>
-              <a href="/support" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5">
-                <HeartIcon className="w-3.5 h-3.5" /> Support
+              <a href="/docs" className="text-xs text-muted-foreground hover:text-foreground transition-colors">API</a>
+              <a href="/support" className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+                <HeartIcon className="w-3 h-3" /> Support
               </a>
             </div>
           </div>
         </nav>
 
-        {/* Hero */}
-        <header className="pt-12 pb-8 px-6 text-center max-w-6xl mx-auto w-full">
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-[-0.04em] leading-tight mb-2">
-            Create QR Code
-          </h1>
-          <p className="text-muted-foreground text-sm max-w-md mx-auto">
-            Generate high-quality QR codes for your digital and physical assets.
-          </p>
-        </header>
+        {/* Main content */}
+        <main className="flex-grow flex flex-col items-center justify-center px-5 py-10 max-w-3xl mx-auto w-full">
 
-        {/* Pill Tabs */}
-        <div className="flex justify-center mb-8 px-6">
-          <div className="inline-flex items-center p-1 bg-muted/50 rounded-xl border border-border/30">
+          {/* QR Type dots */}
+          <div className="flex items-center gap-1 mb-8">
             {QR_TYPES.map((t) => (
               <button
                 key={t.id}
                 onClick={() => setActiveType(t.id)}
-                className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                   activeType === t.id
-                    ? "bg-background text-foreground shadow-sm"
+                    ? "bg-foreground text-background"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <t.Icon className="w-3.5 h-3.5" />
+                <t.Icon className="w-3 h-3" />
                 <span className="hidden sm:inline">{t.label}</span>
               </button>
             ))}
           </div>
-        </div>
 
-        {/* Main Grid - 3:2 layout */}
-        <main className="flex-grow px-6 max-w-6xl mx-auto w-full pb-16">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+          {/* Center card */}
+          <div className="w-full grid sm:grid-cols-[1fr,auto] gap-8 items-start">
+            {/* Left: Input */}
+            <div className="space-y-5">
+              <div className="flex items-center gap-2">
+                {activeTypeData && <activeTypeData.Icon className="w-4 h-4 text-muted-foreground" />}
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium">
+                  {activeTypeData?.label}
+                </span>
+              </div>
+              <TypeFields type={activeType} fields={fields} onChange={handleFieldChange} />
+            </div>
 
-            {/* Configuration - 3 cols */}
-            <div className="lg:col-span-3 space-y-6">
-              <Card className="border-border/30 shadow-[0px_4px_20px_rgba(0,0,0,0.08)]">
-                <CardContent className="p-8 space-y-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    {activeTypeData && <activeTypeData.Icon className="w-4 h-4 text-muted-foreground" />}
-                    <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium">
-                      {activeTypeData?.label} Configuration
-                    </span>
+            {/* Right: QR Preview */}
+            <div className="flex flex-col items-center gap-4 sm:sticky sm:top-20">
+              <div className="w-52 h-52 sm:w-56 sm:h-56 rounded-xl bg-muted/20 border border-border/20 flex items-center justify-center p-3">
+                {qrDataUrl ? (
+                  <img src={qrDataUrl} alt="QR Code" className="w-full h-full object-contain rounded" />
+                ) : (
+                  <div className="text-center">
+                    <QrIcon className="w-10 h-10 text-muted-foreground/20 mx-auto mb-2" />
+                    <p className="text-[10px] text-muted-foreground/40 uppercase tracking-widest">Enter data</p>
                   </div>
+                )}
+              </div>
 
-                  <TypeFields type={activeType} fields={fields} onChange={handleFieldChange} />
-
-                  <Separator className="opacity-30" />
-
-                  {/* Customize - desktop inline */}
-                  <div className="hidden sm:block">
-                    <button
-                      onClick={() => setShowCustomize(!showCustomize)}
-                      className="flex items-center justify-between w-full p-4 bg-muted/30 rounded-lg border border-border/20 hover:bg-muted/50 transition-colors"
-                    >
-                      <div className="flex items-center gap-2">
-                        <PaletteIcon className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm font-medium">Appearance</span>
-                      </div>
-                      <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                        {showCustomize ? "Hide" : "Show"}
-                      </span>
-                    </button>
-                    {showCustomize && <CustomizePanel options={options} setOptions={setOptions} />}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Download Row */}
+              {/* Action row */}
               {qrDataUrl && (
-                <div className="flex flex-wrap items-center gap-3">
-                  <Button className="flex-grow gap-2" onClick={() => downloadAs("png")}>
-                    <DownloadIcon className="w-3.5 h-3.5" /> Download PNG
-                  </Button>
-                  <Button variant="secondary" className="gap-2" onClick={() => downloadAs("svg")}>
-                    <DownloadIcon className="w-3.5 h-3.5" /> SVG
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => downloadAs("jpeg")}>JPEG</Button>
-                  <Button variant="outline" size="sm" onClick={() => downloadAs("webp")}>WebP</Button>
+                <div className="flex items-center gap-2 w-full max-w-56">
+                  {/* Download split button */}
+                  <div className="flex-grow flex">
+                    <Button className="flex-grow rounded-r-none gap-2" onClick={() => downloadAs("png")}>
+                      <DownloadIcon className="w-3.5 h-3.5" /> PNG
+                    </Button>
+                    {mounted && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button className="rounded-l-none border-l border-primary-foreground/20 px-2">
+                            <ChevronDownIcon className="w-3.5 h-3.5" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => downloadAs("png")}>PNG</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => downloadAs("svg")}>SVG</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => downloadAs("jpeg")}>JPEG</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => downloadAs("webp")}>WebP</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </div>
+
+                  {/* Share */}
                   {"share" in navigator && (
-                    <Button variant="outline" size="sm" className="gap-1.5" onClick={shareQR}>
-                      <ShareIcon className="w-3.5 h-3.5" /> Share
+                    <Button variant="outline" size="icon" onClick={shareQR} className="shrink-0">
+                      <ShareIcon className="w-3.5 h-3.5" />
                     </Button>
                   )}
                 </div>
               )}
-            </div>
 
-            {/* Preview - 2 cols, sticky */}
-            <div className="lg:col-span-2 lg:sticky lg:top-20 space-y-4">
-              <Card className="border-border/30 shadow-[0px_10px_40px_rgba(0,0,0,0.12)] overflow-hidden">
-                <CardContent className="p-8">
-                  {/* QR Preview */}
-                  <div className="aspect-square bg-muted/30 rounded-lg flex items-center justify-center p-6 mb-6 border border-border/10">
-                    {qrDataUrl ? (
-                      <img
-                        src={qrDataUrl}
-                        alt="Generated QR Code"
-                        className="w-full h-full object-contain rounded"
-                      />
-                    ) : (
-                      <div className="text-center">
-                        <QrIcon className="w-12 h-12 text-muted-foreground/20 mx-auto mb-3" />
-                        <p className="text-muted-foreground/60 text-sm">
-                          Fill in details to<br />generate your QR
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Info */}
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-end">
-                      <div>
-                        <h3 className="text-base font-semibold tracking-tight">Live Preview</h3>
-                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
-                          {options.size} x {options.size} px
-                        </p>
-                      </div>
+              {/* Settings button -> Sheet */}
+              {mounted && (
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <button className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/60 hover:text-muted-foreground transition-colors mt-1">
+                      <SettingsIcon className="w-3.5 h-3.5" />
+                      Customize
+                    </button>
+                  </SheetTrigger>
+                  <SheetContent side="bottom" className="max-h-[70vh] sm:max-h-none sm:max-w-sm" data-vaul-no-drag>
+                    <SheetHeader>
+                      <SheetTitle className="text-sm">Customize QR Code</SheetTitle>
+                    </SheetHeader>
+                    <div className="overflow-y-auto">
+                      <CustomizePanel options={options} setOptions={setOptions} activeType={activeType} setActiveType={setActiveType} />
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Stats */}
-              <div className="p-5 rounded-xl bg-muted/20 border border-border/20">
-                <span className="text-[10px] uppercase tracking-widest text-muted-foreground block mb-3">Details</span>
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <span className="text-[10px] uppercase tracking-widest text-muted-foreground/60">Type</span>
-                    <p className="text-sm font-semibold">{activeTypeData?.label}</p>
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase tracking-widest text-muted-foreground/60">EC Level</span>
-                    <p className="text-sm font-semibold">{options.errorCorrection}</p>
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase tracking-widest text-muted-foreground/60">Status</span>
-                    <p className="text-sm font-semibold">{qrData ? "Ready" : "Waiting"}</p>
-                  </div>
-                </div>
-              </div>
+                  </SheetContent>
+                </Sheet>
+              )}
             </div>
           </div>
         </main>
 
         {/* Footer */}
-        <footer className="mt-auto border-t border-border/50 bg-muted/20">
-          <div className="flex flex-col sm:flex-row justify-between items-center px-6 py-6 max-w-6xl mx-auto gap-4">
-            <span className="text-[11px] uppercase tracking-widest text-muted-foreground/60">QRzap</span>
-            <div className="flex items-center gap-6">
-              <a href="/support" className="text-[11px] uppercase tracking-widest text-muted-foreground/60 hover:text-foreground transition-colors">Support</a>
-              <span className="text-[11px] uppercase tracking-widest text-muted-foreground/60">No data stored</span>
-            </div>
+        <footer className="border-t border-border/50 bg-muted/10">
+          <div className="flex items-center justify-between px-5 py-3 max-w-3xl mx-auto text-[10px] uppercase tracking-widest text-muted-foreground/40">
+            <span>QRzap</span>
+            <span>No data stored</span>
           </div>
         </footer>
       </div>
@@ -490,63 +398,87 @@ export default function QRGenerator() {
 }
 
 // --- Customize Panel ---
-function CustomizePanel({ options, setOptions }: {
+function CustomizePanel({ options, setOptions, activeType, setActiveType }: {
   options: QROptions; setOptions: React.Dispatch<React.SetStateAction<QROptions>>;
+  activeType: QRType; setActiveType: (t: QRType) => void;
 }) {
   return (
-    <div className="space-y-6 pt-6">
-      {/* FG Color */}
+    <div className="space-y-6 py-4 px-1">
+      {/* Type selector */}
       <div className="space-y-3">
-        <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Foreground Color</Label>
-        <div className="flex items-center gap-3">
+        <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">QR Type</Label>
+        <div className="grid grid-cols-4 gap-2">
+          {QR_TYPES.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setActiveType(t.id)}
+              className={`flex flex-col items-center gap-1 p-2.5 rounded-lg text-[10px] font-medium transition-all ${
+                activeType === t.id
+                  ? "bg-foreground text-background"
+                  : "bg-muted/30 text-muted-foreground hover:text-foreground border border-border/20"
+              }`}
+            >
+              <t.Icon className="w-4 h-4" />
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <Separator className="opacity-20" />
+
+      {/* Foreground */}
+      <div className="space-y-3">
+        <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Foreground</Label>
+        <div className="flex items-center gap-2">
           <div className="flex gap-1.5">
             {PRESET_COLORS.map((c) => (
               <button
                 key={`fg-${c}`}
                 onClick={() => setOptions((p) => ({ ...p, fgColor: c }))}
-                className={`w-7 h-7 rounded-full ring-2 ring-offset-2 ring-offset-background transition-all ${
-                  options.fgColor === c ? "ring-foreground/40" : "ring-transparent hover:ring-muted-foreground/20"
+                className={`w-6 h-6 rounded-full ring-2 ring-offset-2 ring-offset-background transition-all ${
+                  options.fgColor === c ? "ring-foreground/40" : "ring-transparent"
                 }`}
                 style={{ backgroundColor: c }}
               />
             ))}
           </div>
-          <input type="color" value={options.fgColor} onChange={(e) => setOptions((p) => ({ ...p, fgColor: e.target.value }))} className="w-8 h-8 rounded cursor-pointer border-0 bg-transparent" />
-          <span className="text-xs font-mono text-muted-foreground">{options.fgColor}</span>
+          <input type="color" value={options.fgColor} onChange={(e) => setOptions((p) => ({ ...p, fgColor: e.target.value }))} className="w-7 h-7 rounded cursor-pointer border-0 bg-transparent" />
+          <span className="text-[10px] font-mono text-muted-foreground">{options.fgColor}</span>
         </div>
       </div>
 
-      {/* BG Color */}
+      {/* Background */}
       <div className="space-y-3">
-        <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Background Color</Label>
-        <div className="flex items-center gap-3">
+        <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Background</Label>
+        <div className="flex items-center gap-2">
           <div className="flex gap-1.5">
             {PRESET_COLORS.map((c) => (
               <button
                 key={`bg-${c}`}
                 onClick={() => setOptions((p) => ({ ...p, bgColor: c }))}
-                className={`w-7 h-7 rounded-full ring-2 ring-offset-2 ring-offset-background transition-all ${
-                  options.bgColor === c ? "ring-foreground/40" : "ring-transparent hover:ring-muted-foreground/20"
+                className={`w-6 h-6 rounded-full ring-2 ring-offset-2 ring-offset-background transition-all ${
+                  options.bgColor === c ? "ring-foreground/40" : "ring-transparent"
                 }`}
                 style={{ backgroundColor: c }}
               />
             ))}
           </div>
-          <input type="color" value={options.bgColor} onChange={(e) => setOptions((p) => ({ ...p, bgColor: e.target.value }))} className="w-8 h-8 rounded cursor-pointer border-0 bg-transparent" />
-          <span className="text-xs font-mono text-muted-foreground">{options.bgColor}</span>
+          <input type="color" value={options.bgColor} onChange={(e) => setOptions((p) => ({ ...p, bgColor: e.target.value }))} className="w-7 h-7 rounded cursor-pointer border-0 bg-transparent" />
+          <span className="text-[10px] font-mono text-muted-foreground">{options.bgColor}</span>
         </div>
       </div>
 
       {/* Size */}
       <div className="space-y-3">
-        <div className="flex items-center justify-between">
+        <div className="flex justify-between">
           <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Size</Label>
-          <span className="text-xs font-mono text-muted-foreground">{options.size}px</span>
+          <span className="text-[10px] font-mono text-muted-foreground">{options.size}px</span>
         </div>
         <Slider value={[options.size]} onValueChange={([v]) => setOptions((p) => ({ ...p, size: v }))} min={128} max={512} step={8} />
       </div>
 
-      {/* Error Correction - pill buttons */}
+      {/* Error Correction */}
       <div className="space-y-3">
         <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Error Correction</Label>
         <div className="flex gap-2">
@@ -554,13 +486,13 @@ function CustomizePanel({ options, setOptions }: {
             <button
               key={lvl.value}
               onClick={() => setOptions((p) => ({ ...p, errorCorrection: lvl.value as QROptions["errorCorrection"] }))}
-              className={`px-4 py-2 text-xs font-semibold rounded-full transition-all ${
+              className={`px-3 py-1.5 text-[10px] font-semibold rounded-full uppercase transition-all ${
                 options.errorCorrection === lvl.value
                   ? "bg-foreground text-background"
-                  : "bg-muted border border-border/30 text-muted-foreground hover:text-foreground"
+                  : "bg-muted/30 text-muted-foreground border border-border/20"
               }`}
             >
-              {lvl.label.toUpperCase()}
+              {lvl.label}
             </button>
           ))}
         </div>
