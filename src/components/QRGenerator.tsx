@@ -1,17 +1,24 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import QRCode from "qrcode";
+import {
+  LinkIcon, WifiIcon, PhoneIcon, EmailIcon,
+  SmsIcon, UserIcon, TextIcon, DownloadIcon,
+  ChevronDownIcon, PaletteIcon, HeartIcon, QrIcon,
+} from "./icons";
 
-const QR_TYPES = [
-  { id: "url", label: "URL", icon: "🔗" },
-  { id: "wifi", label: "WiFi", icon: "📶" },
-  { id: "phone", label: "Phone", icon: "📞" },
-  { id: "email", label: "Email", icon: "✉️" },
-  { id: "sms", label: "SMS", icon: "💬" },
-  { id: "vcard", label: "vCard", icon: "👤" },
-  { id: "text", label: "Text", icon: "📝" },
-] as const;
+type IconComponent = React.ComponentType<{ className?: string }>;
 
-type QRType = (typeof QR_TYPES)[number]["id"];
+const QR_TYPES: ReadonlyArray<{ id: QRType; label: string; Icon: IconComponent }> = [
+  { id: "url", label: "URL", Icon: LinkIcon },
+  { id: "wifi", label: "WiFi", Icon: WifiIcon },
+  { id: "phone", label: "Phone", Icon: PhoneIcon },
+  { id: "email", label: "Email", Icon: EmailIcon },
+  { id: "sms", label: "SMS", Icon: SmsIcon },
+  { id: "vcard", label: "vCard", Icon: UserIcon },
+  { id: "text", label: "Text", Icon: TextIcon },
+];
+
+type QRType = "url" | "wifi" | "phone" | "email" | "sms" | "vcard" | "text";
 
 interface WifiData {
   ssid: string;
@@ -44,14 +51,8 @@ const ERROR_LEVELS = [
 ] as const;
 
 const PRESET_COLORS = [
-  "#ffffff",
-  "#000000",
-  "#6366f1",
-  "#ec4899",
-  "#10b981",
-  "#f59e0b",
-  "#ef4444",
-  "#3b82f6",
+  "#ffffff", "#000000", "#0f172a", "#1e293b",
+  "#0ea5e9", "#10b981", "#f59e0b", "#ef4444",
 ];
 
 function buildQRData(type: QRType, fields: Record<string, string>): string {
@@ -128,10 +129,10 @@ function InputField({
   textarea?: boolean;
 }) {
   const baseClass =
-    "w-full rounded-lg border border-border bg-bg px-3 py-2.5 text-sm text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent transition-colors";
+    "w-full rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50 transition-colors";
   return (
     <div className="space-y-1.5">
-      <label className="block text-xs font-medium text-text-muted uppercase tracking-wider">
+      <label className="block text-xs font-medium text-zinc-400 tracking-wide">
         {label}
       </label>
       {textarea ? (
@@ -194,25 +195,25 @@ function TypeFields({
           <InputField label="Network Name (SSID)" name="ssid" value={fields.ssid || ""} onChange={onChange} placeholder="MyWiFiNetwork" />
           <InputField label="Password" name="wifiPassword" value={fields.wifiPassword || ""} onChange={onChange} type="password" placeholder="Network password" />
           <div className="space-y-1.5">
-            <label className="block text-xs font-medium text-text-muted uppercase tracking-wider">
+            <label className="block text-xs font-medium text-zinc-400 tracking-wide">
               Encryption
             </label>
             <select
               value={fields.encryption || "WPA"}
               onChange={(e) => onChange("encryption", e.target.value)}
-              className="w-full rounded-lg border border-border bg-bg px-3 py-2.5 text-sm text-text focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent transition-colors"
+              className="w-full rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3.5 py-2.5 text-sm text-zinc-100 focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50 transition-colors"
             >
               <option value="WPA">WPA/WPA2</option>
               <option value="WEP">WEP</option>
               <option value="nopass">None</option>
             </select>
           </div>
-          <label className="flex items-center gap-2 text-sm text-text-muted cursor-pointer">
+          <label className="flex items-center gap-2 text-sm text-zinc-400 cursor-pointer">
             <input
               type="checkbox"
               checked={fields.hidden === "true"}
               onChange={(e) => onChange("hidden", e.target.checked ? "true" : "false")}
-              className="rounded border-border accent-accent"
+              className="rounded border-zinc-600 accent-sky-500"
             />
             Hidden network
           </label>
@@ -239,7 +240,7 @@ export default function QRGenerator() {
   const [fields, setFields] = useState<Record<string, string>>({ url: "https://example.com" });
   const [options, setOptions] = useState<QROptions>({
     fgColor: "#ffffff",
-    bgColor: "#0a0a0a",
+    bgColor: "#09090b",
     size: 280,
     errorCorrection: "M",
   });
@@ -326,55 +327,63 @@ export default function QRGenerator() {
     [qrData, qrDataUrl, svgString, activeType, options.size]
   );
 
+  const activeTypeData = QR_TYPES.find((t) => t.id === activeType);
+
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-zinc-950">
       {/* Header */}
-      <header className="border-b border-border">
-        <div className="mx-auto max-w-5xl px-4 py-5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center">
-              <svg viewBox="0 0 32 32" className="w-5 h-5" fill="none">
-                <rect x="2" y="2" width="10" height="10" rx="2" fill="#6366f1" />
-                <rect x="20" y="2" width="10" height="10" rx="2" fill="#6366f1" />
-                <rect x="2" y="20" width="10" height="10" rx="2" fill="#6366f1" />
-                <rect x="14" y="14" width="4" height="4" rx="1" fill="#818cf8" />
-                <rect x="22" y="22" width="8" height="8" rx="2" fill="#818cf8" />
-              </svg>
+      <header className="border-b border-zinc-800/80">
+        <div className="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between">
+          <a href="/" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center">
+              <QrIcon className="w-4.5 h-4.5 text-sky-400" />
             </div>
-            <h1 className="text-xl font-semibold tracking-tight">QRzap</h1>
+            <h1 className="text-lg font-semibold tracking-tight text-zinc-100">QRzap</h1>
+          </a>
+          <div className="flex items-center gap-4">
+            <a
+              href="/support"
+              className="flex items-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-sky-400 transition-colors"
+            >
+              <HeartIcon className="w-3.5 h-3.5" />
+              Support
+            </a>
+            <span className="text-xs text-zinc-500">Free QR Code Generator</span>
           </div>
-          <span className="text-xs text-text-muted">Generate QR codes instantly</span>
         </div>
       </header>
 
       {/* Main */}
       <main className="mx-auto max-w-5xl px-4 py-8">
         {/* Type selector */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {QR_TYPES.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setActiveType(t.id)}
-              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
-                activeType === t.id
-                  ? "bg-accent text-white shadow-lg shadow-accent/25"
-                  : "bg-surface text-text-muted hover:bg-surface-hover hover:text-text border border-border"
-              }`}
-            >
-              <span>{t.icon}</span>
-              {t.label}
-            </button>
-          ))}
+        <div className="flex flex-wrap gap-1.5 mb-8">
+          {QR_TYPES.map((t) => {
+            const isActive = activeType === t.id;
+            return (
+              <button
+                key={t.id}
+                onClick={() => setActiveType(t.id)}
+                className={`flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium transition-all ${
+                  isActive
+                    ? "bg-sky-500/15 text-sky-400 border border-sky-500/30"
+                    : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50 border border-transparent"
+                }`}
+              >
+                <t.Icon className="w-4 h-4" />
+                {t.label}
+              </button>
+            );
+          })}
         </div>
 
         {/* Two-card layout */}
         <div className="grid md:grid-cols-2 gap-6">
           {/* Input Card */}
-          <div className="rounded-xl border border-border bg-surface p-6 space-y-5">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-text-muted">
-                {QR_TYPES.find((t) => t.id === activeType)?.icon}{" "}
-                {QR_TYPES.find((t) => t.id === activeType)?.label} Details
+          <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/50 p-6 space-y-5">
+            <div className="flex items-center gap-2">
+              {activeTypeData && <activeTypeData.Icon className="w-4 h-4 text-zinc-500" />}
+              <h2 className="text-sm font-medium text-zinc-300">
+                {activeTypeData?.label} Details
               </h2>
             </div>
 
@@ -383,25 +392,22 @@ export default function QRGenerator() {
             {/* Customize toggle */}
             <button
               onClick={() => setShowCustomize(!showCustomize)}
-              className="w-full flex items-center justify-between rounded-lg border border-border px-4 py-2.5 text-sm text-text-muted hover:text-text hover:border-border-hover transition-colors"
+              className="w-full flex items-center justify-between rounded-lg border border-zinc-700/50 px-4 py-2.5 text-sm text-zinc-400 hover:text-zinc-200 hover:border-zinc-600/50 transition-colors"
             >
-              <span>Customize Appearance</span>
-              <svg
+              <span className="flex items-center gap-2">
+                <PaletteIcon className="w-4 h-4" />
+                Customize Appearance
+              </span>
+              <ChevronDownIcon
                 className={`w-4 h-4 transition-transform ${showCustomize ? "rotate-180" : ""}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
+              />
             </button>
 
             {showCustomize && (
               <div className="space-y-4 pt-1">
                 {/* Foreground color */}
                 <div className="space-y-2">
-                  <label className="block text-xs font-medium text-text-muted uppercase tracking-wider">
+                  <label className="block text-xs font-medium text-zinc-400 tracking-wide">
                     Foreground Color
                   </label>
                   <div className="flex items-center gap-2">
@@ -411,7 +417,7 @@ export default function QRGenerator() {
                           key={`fg-${c}`}
                           onClick={() => setOptions((prev) => ({ ...prev, fgColor: c }))}
                           className={`w-6 h-6 rounded-full border-2 transition-all ${
-                            options.fgColor === c ? "border-accent scale-110" : "border-border"
+                            options.fgColor === c ? "border-sky-400 scale-110" : "border-zinc-700"
                           }`}
                           style={{ backgroundColor: c }}
                         />
@@ -428,7 +434,7 @@ export default function QRGenerator() {
 
                 {/* Background color */}
                 <div className="space-y-2">
-                  <label className="block text-xs font-medium text-text-muted uppercase tracking-wider">
+                  <label className="block text-xs font-medium text-zinc-400 tracking-wide">
                     Background Color
                   </label>
                   <div className="flex items-center gap-2">
@@ -438,7 +444,7 @@ export default function QRGenerator() {
                           key={`bg-${c}`}
                           onClick={() => setOptions((prev) => ({ ...prev, bgColor: c }))}
                           className={`w-6 h-6 rounded-full border-2 transition-all ${
-                            options.bgColor === c ? "border-accent scale-110" : "border-border"
+                            options.bgColor === c ? "border-sky-400 scale-110" : "border-zinc-700"
                           }`}
                           style={{ backgroundColor: c }}
                         />
@@ -455,9 +461,9 @@ export default function QRGenerator() {
 
                 {/* Size slider */}
                 <div className="space-y-2">
-                  <label className="flex justify-between text-xs font-medium text-text-muted uppercase tracking-wider">
+                  <label className="flex justify-between text-xs font-medium text-zinc-400 tracking-wide">
                     <span>Size</span>
-                    <span className="text-text font-mono">{options.size}px</span>
+                    <span className="text-zinc-300 font-mono">{options.size}px</span>
                   </label>
                   <input
                     type="range"
@@ -468,13 +474,13 @@ export default function QRGenerator() {
                     onChange={(e) =>
                       setOptions((prev) => ({ ...prev, size: parseInt(e.target.value) }))
                     }
-                    className="w-full accent-accent"
+                    className="w-full accent-sky-500"
                   />
                 </div>
 
                 {/* Error correction */}
                 <div className="space-y-2">
-                  <label className="block text-xs font-medium text-text-muted uppercase tracking-wider">
+                  <label className="block text-xs font-medium text-zinc-400 tracking-wide">
                     Error Correction
                   </label>
                   <div className="grid grid-cols-4 gap-2">
@@ -489,15 +495,15 @@ export default function QRGenerator() {
                         }
                         className={`rounded-lg px-2 py-1.5 text-xs font-medium transition-all ${
                           options.errorCorrection === lvl.value
-                            ? "bg-accent text-white"
-                            : "bg-bg text-text-muted border border-border hover:border-border-hover"
+                            ? "bg-sky-500/15 text-sky-400 border border-sky-500/30"
+                            : "text-zinc-400 border border-zinc-700/50 hover:border-zinc-600/50"
                         }`}
                       >
                         {lvl.value}
                       </button>
                     ))}
                   </div>
-                  <p className="text-xs text-text-muted">
+                  <p className="text-xs text-zinc-500">
                     {ERROR_LEVELS.find((l) => l.value === options.errorCorrection)?.label}
                   </p>
                 </div>
@@ -506,15 +512,15 @@ export default function QRGenerator() {
           </div>
 
           {/* Preview Card */}
-          <div className="rounded-xl border border-border bg-surface p-6 flex flex-col items-center justify-between gap-6">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-text-muted self-start">
+          <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/50 p-6 flex flex-col items-center justify-between gap-6">
+            <h2 className="text-sm font-medium text-zinc-300 self-start">
               Preview
             </h2>
 
             {/* QR Display */}
             <div className="flex-1 flex items-center justify-center">
               {qrDataUrl ? (
-                <div className="rounded-xl p-4 bg-bg border border-border">
+                <div className="rounded-xl p-4 bg-zinc-950 border border-zinc-800/80">
                   <img
                     src={qrDataUrl}
                     alt="Generated QR Code"
@@ -524,10 +530,13 @@ export default function QRGenerator() {
                   />
                 </div>
               ) : (
-                <div className="w-64 h-64 rounded-xl border-2 border-dashed border-border flex items-center justify-center">
-                  <p className="text-text-muted text-sm text-center px-4">
-                    Fill in the details to<br />generate your QR code
-                  </p>
+                <div className="w-64 h-64 rounded-xl border-2 border-dashed border-zinc-800 flex items-center justify-center">
+                  <div className="text-center px-4">
+                    <QrIcon className="w-8 h-8 text-zinc-700 mx-auto mb-3" />
+                    <p className="text-zinc-500 text-sm">
+                      Fill in the details to<br />generate your QR code
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
@@ -536,33 +545,37 @@ export default function QRGenerator() {
 
             {/* Download buttons */}
             {qrDataUrl && (
-              <div className="w-full space-y-3">
+              <div className="w-full space-y-2.5">
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => downloadAs("png")}
-                    className="rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white hover:bg-accent-hover transition-colors shadow-lg shadow-accent/20"
+                    className="flex items-center justify-center gap-2 rounded-lg bg-sky-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-sky-400 transition-colors"
                   >
-                    Download PNG
+                    <DownloadIcon className="w-3.5 h-3.5" />
+                    PNG
                   </button>
                   <button
                     onClick={() => downloadAs("svg")}
-                    className="rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white hover:bg-accent-hover transition-colors shadow-lg shadow-accent/20"
+                    className="flex items-center justify-center gap-2 rounded-lg bg-sky-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-sky-400 transition-colors"
                   >
-                    Download SVG
+                    <DownloadIcon className="w-3.5 h-3.5" />
+                    SVG
                   </button>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => downloadAs("jpeg")}
-                    className="rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-text-muted hover:text-text hover:border-border-hover transition-colors"
+                    className="flex items-center justify-center gap-2 rounded-lg border border-zinc-700/50 px-4 py-2.5 text-sm font-medium text-zinc-300 hover:text-white hover:border-zinc-600 transition-colors"
                   >
-                    Download JPEG
+                    <DownloadIcon className="w-3.5 h-3.5" />
+                    JPEG
                   </button>
                   <button
                     onClick={() => downloadAs("webp")}
-                    className="rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-text-muted hover:text-text hover:border-border-hover transition-colors"
+                    className="flex items-center justify-center gap-2 rounded-lg border border-zinc-700/50 px-4 py-2.5 text-sm font-medium text-zinc-300 hover:text-white hover:border-zinc-600 transition-colors"
                   >
-                    Download WebP
+                    <DownloadIcon className="w-3.5 h-3.5" />
+                    WebP
                   </button>
                 </div>
               </div>
@@ -572,10 +585,10 @@ export default function QRGenerator() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border mt-12">
-        <div className="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between text-xs text-text-muted">
-          <span>QRzap — Free QR Code Generator</span>
-          <span>No data is stored. Everything runs in your browser.</span>
+      <footer className="border-t border-zinc-800/80 mt-12">
+        <div className="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between text-xs text-zinc-500">
+          <span>QRzap / Free QR Code Generator</span>
+          <span>No data stored. Everything runs in your browser.</span>
         </div>
       </footer>
     </div>
