@@ -320,6 +320,7 @@ export default function QRGenerator() {
                   </SheetContent>
                 </Sheet>
               )}
+              <a href="/docs" className="text-sm text-muted-foreground hover:text-foreground transition-colors">API</a>
               <a href="/support" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5">
                 <HeartIcon className="w-3.5 h-3.5" /> Support
               </a>
