@@ -4,6 +4,7 @@ import {
   LinkIcon, WifiIcon, PhoneIcon, EmailIcon,
   SmsIcon, UserIcon, TextIcon, DownloadIcon,
   ChevronDownIcon, PaletteIcon, HeartIcon, QrIcon,
+  ClipboardIcon, ShareIcon, ContactBookIcon, CheckIcon,
 } from "./icons";
 
 type IconComponent = React.ComponentType<{ className?: string }>;
@@ -111,6 +112,35 @@ function buildQRData(type: QRType, fields: Record<string, string>): string {
   }
 }
 
+function PasteButton({ onPaste }: { onPaste: (text: string) => void }) {
+  const [pasted, setPasted] = useState(false);
+
+  const handlePaste = useCallback(async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text) {
+        onPaste(text.trim());
+        setPasted(true);
+        setTimeout(() => setPasted(false), 1500);
+      }
+    } catch {
+      // Clipboard access denied or unavailable
+    }
+  }, [onPaste]);
+
+  return (
+    <button
+      type="button"
+      onClick={handlePaste}
+      className="flex items-center gap-1 rounded-md border border-zinc-700/50 px-2 py-1 text-xs text-zinc-400 hover:text-zinc-200 hover:border-zinc-600/50 transition-colors"
+      title="Paste from clipboard"
+    >
+      {pasted ? <CheckIcon className="w-3 h-3 text-emerald-400" /> : <ClipboardIcon className="w-3 h-3" />}
+      {pasted ? "Pasted" : "Paste"}
+    </button>
+  );
+}
+
 function InputField({
   label,
   name,
@@ -119,6 +149,7 @@ function InputField({
   type = "text",
   placeholder,
   textarea = false,
+  showPaste = false,
 }: {
   label: string;
   name: string;
@@ -127,14 +158,18 @@ function InputField({
   type?: string;
   placeholder?: string;
   textarea?: boolean;
+  showPaste?: boolean;
 }) {
   const baseClass =
     "w-full rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50 transition-colors";
   return (
     <div className="space-y-1.5">
-      <label className="block text-xs font-medium text-zinc-400 tracking-wide">
-        {label}
-      </label>
+      <div className="flex items-center justify-between">
+        <label className="block text-xs font-medium text-zinc-400 tracking-wide">
+          {label}
+        </label>
+        {showPaste && <PasteButton onPaste={(text) => onChange(name, text)} />}
+      </div>
       {textarea ? (
         <textarea
           name={name}
@@ -158,6 +193,57 @@ function InputField({
   );
 }
 
+function ContactPickerButton({ onChange }: { onChange: (name: string, value: string) => void }) {
+  const [supported, setSupported] = useState(false);
+
+  useEffect(() => {
+    setSupported("contacts" in navigator && "ContactsManager" in window);
+  }, []);
+
+  if (!supported) return null;
+
+  const pickContact = async () => {
+    try {
+      const nav = navigator as Navigator & {
+        contacts: {
+          select: (props: string[], opts: { multiple: boolean }) => Promise<Array<{
+            name?: string[];
+            email?: string[];
+            tel?: string[];
+          }>>;
+        };
+      };
+      const contacts = await nav.contacts.select(
+        ["name", "email", "tel"],
+        { multiple: false }
+      );
+      if (contacts.length > 0) {
+        const c = contacts[0];
+        if (c.name?.[0]) {
+          const parts = c.name[0].split(" ");
+          onChange("firstName", parts[0] || "");
+          onChange("lastName", parts.slice(1).join(" ") || "");
+        }
+        if (c.tel?.[0]) onChange("vcardPhone", c.tel[0]);
+        if (c.email?.[0]) onChange("vcardEmail", c.email[0]);
+      }
+    } catch {
+      // User cancelled or API unavailable
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={pickContact}
+      className="w-full flex items-center justify-center gap-2 rounded-lg border border-dashed border-zinc-700/50 px-4 py-2.5 text-sm text-zinc-400 hover:text-zinc-200 hover:border-zinc-600/50 transition-colors"
+    >
+      <ContactBookIcon className="w-4 h-4" />
+      Import from Contacts
+    </button>
+  );
+}
+
 function TypeFields({
   type,
   fields,
@@ -169,15 +255,15 @@ function TypeFields({
 }) {
   switch (type) {
     case "url":
-      return <InputField label="URL" name="url" value={fields.url || ""} onChange={onChange} placeholder="https://example.com" />;
+      return <InputField label="URL" name="url" value={fields.url || ""} onChange={onChange} placeholder="https://example.com" showPaste />;
     case "text":
-      return <InputField label="Text" name="text" value={fields.text || ""} onChange={onChange} placeholder="Enter your text here..." textarea />;
+      return <InputField label="Text" name="text" value={fields.text || ""} onChange={onChange} placeholder="Enter your text here..." textarea showPaste />;
     case "phone":
-      return <InputField label="Phone Number" name="phone" value={fields.phone || ""} onChange={onChange} type="tel" placeholder="+1 234 567 8900" />;
+      return <InputField label="Phone Number" name="phone" value={fields.phone || ""} onChange={onChange} type="tel" placeholder="+1 234 567 8900" showPaste />;
     case "email":
       return (
         <div className="space-y-3">
-          <InputField label="Email Address" name="emailAddress" value={fields.emailAddress || ""} onChange={onChange} type="email" placeholder="hello@example.com" />
+          <InputField label="Email Address" name="emailAddress" value={fields.emailAddress || ""} onChange={onChange} type="email" placeholder="hello@example.com" showPaste />
           <InputField label="Subject" name="subject" value={fields.subject || ""} onChange={onChange} placeholder="Optional subject" />
           <InputField label="Body" name="body" value={fields.body || ""} onChange={onChange} placeholder="Optional message body" textarea />
         </div>
@@ -185,7 +271,7 @@ function TypeFields({
     case "sms":
       return (
         <div className="space-y-3">
-          <InputField label="Phone Number" name="smsPhone" value={fields.smsPhone || ""} onChange={onChange} type="tel" placeholder="+1 234 567 8900" />
+          <InputField label="Phone Number" name="smsPhone" value={fields.smsPhone || ""} onChange={onChange} type="tel" placeholder="+1 234 567 8900" showPaste />
           <InputField label="Message" name="smsBody" value={fields.smsBody || ""} onChange={onChange} placeholder="Optional message" textarea />
         </div>
       );
@@ -222,6 +308,7 @@ function TypeFields({
     case "vcard":
       return (
         <div className="space-y-3">
+          <ContactPickerButton onChange={onChange} />
           <div className="grid grid-cols-2 gap-3">
             <InputField label="First Name" name="firstName" value={fields.firstName || ""} onChange={onChange} placeholder="John" />
             <InputField label="Last Name" name="lastName" value={fields.lastName || ""} onChange={onChange} placeholder="Doe" />
@@ -326,6 +413,29 @@ export default function QRGenerator() {
     },
     [qrData, qrDataUrl, svgString, activeType, options.size]
   );
+
+  const shareQR = useCallback(async () => {
+    if (!qrDataUrl) return;
+    try {
+      const res = await fetch(qrDataUrl);
+      const blob = await res.blob();
+      const file = new File([blob], `qrzap-${activeType}.png`, { type: "image/png" });
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          title: "QR Code from QRzap",
+          files: [file],
+        });
+      } else {
+        await navigator.share({
+          title: "QR Code from QRzap",
+          text: "Check out this QR code I made with QRzap",
+          url: window.location.href,
+        });
+      }
+    } catch {
+      // User cancelled share
+    }
+  }, [qrDataUrl, activeType]);
 
   const activeTypeData = QR_TYPES.find((t) => t.id === activeType);
 
@@ -578,6 +688,15 @@ export default function QRGenerator() {
                     WebP
                   </button>
                 </div>
+                {"share" in navigator && (
+                  <button
+                    onClick={shareQR}
+                    className="w-full flex items-center justify-center gap-2 rounded-lg border border-zinc-700/50 px-4 py-2.5 text-sm font-medium text-zinc-300 hover:text-white hover:border-zinc-600 transition-colors"
+                  >
+                    <ShareIcon className="w-3.5 h-3.5" />
+                    Share QR Code
+                  </button>
+                )}
               </div>
             )}
           </div>
