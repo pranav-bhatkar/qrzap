@@ -1,27 +1,21 @@
-/**
- * QRzap REST API - Cloudflare Worker
- *
- * Deploy: wrangler deploy api/worker.js --name qrzap-api
- *
- * Usage: POST https://api.qrzap.fun/generate
- *        GET  https://api.qrzap.fun/generate?type=url&url=https://example.com
- */
-
+import type { APIRoute } from "astro";
 import QRCode from "qrcode";
 
-const QR_BUILDERS = {
+export const prerender = false;
+
+const QR_BUILDERS: Record<string, (args: Record<string, string>) => string> = {
   url: ({ url }) => url || "",
   text: ({ text }) => text || "",
   phone: ({ phone }) => `tel:${phone || ""}`,
   email: ({ email, subject, body }) => {
-    const params = [];
+    const params: string[] = [];
     if (subject) params.push(`subject=${encodeURIComponent(subject)}`);
     if (body) params.push(`body=${encodeURIComponent(body)}`);
     return `mailto:${email || ""}${params.length ? "?" + params.join("&") : ""}`;
   },
   sms: ({ phone, message }) =>
     `sms:${phone || ""}${message ? "?body=" + encodeURIComponent(message) : ""}`,
-  wifi: ({ ssid, password = "", encryption = "WPA", hidden = false }) =>
+  wifi: ({ ssid, password = "", encryption = "WPA", hidden = "false" }) =>
     `WIFI:T:${encryption};S:${ssid || ""};P:${password};H:${hidden};;`,
   vcard: ({ firstName = "", lastName = "", phone, email, org, url }) => {
     const lines = [
@@ -39,38 +33,39 @@ const QR_BUILDERS = {
   },
 };
 
-const CORS_HEADERS = {
+const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
 };
 
-function jsonResponse(data, status = 200) {
-  return new Response(JSON.stringify(data), {
+function jsonError(message: string, status = 400) {
+  return new Response(JSON.stringify({ error: message }), {
     status,
     headers: { "Content-Type": "application/json", ...CORS_HEADERS },
   });
 }
 
-async function handleGenerate(params) {
+async function handleGenerate(params: Record<string, string>) {
   const type = params.type;
-  if (!type || !QR_BUILDERS[type]) {
-    return jsonResponse(
-      { error: `Invalid type. Valid: ${Object.keys(QR_BUILDERS).join(", ")}` },
-      400
+  const builder = QR_BUILDERS[type];
+
+  if (!type || !builder) {
+    return jsonError(
+      `Invalid type. Valid: ${Object.keys(QR_BUILDERS).join(", ")}`
     );
   }
 
-  const builder = QR_BUILDERS[type];
   const data = builder(params);
-
   if (!data) {
-    return jsonResponse({ error: "No data to encode. Check required fields." }, 400);
+    return jsonError("No data to encode. Check required fields.");
   }
 
   const size = parseInt(params.size) || 400;
-  const ec = ["L", "M", "Q", "H"].includes(params.errorCorrection)
-    ? params.errorCorrection
+  const ec = (["L", "M", "Q", "H"] as const).includes(
+    params.errorCorrection as "L" | "M" | "Q" | "H"
+  )
+    ? (params.errorCorrection as "L" | "M" | "Q" | "H")
     : "M";
   const format = params.format === "svg" ? "svg" : "png";
 
@@ -99,51 +94,28 @@ async function handleGenerate(params) {
       headers: { "Content-Type": "image/png", ...CORS_HEADERS },
     });
   } catch (err) {
-    return jsonResponse({ error: `Generation failed: ${err.message}` }, 500);
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return jsonError(`Generation failed: ${message}`, 500);
   }
 }
 
-export default {
-  async fetch(request) {
-    if (request.method === "OPTIONS") {
-      return new Response(null, { headers: CORS_HEADERS });
-    }
+export const OPTIONS: APIRoute = () => {
+  return new Response(null, { headers: CORS_HEADERS });
+};
 
-    const url = new URL(request.url);
+export const GET: APIRoute = async ({ url }) => {
+  const params: Record<string, string> = {};
+  for (const [key, value] of url.searchParams) {
+    params[key] = value;
+  }
+  return handleGenerate(params);
+};
 
-    if (url.pathname === "/" || url.pathname === "") {
-      return jsonResponse({
-        name: "QRzap API",
-        version: "1.0.0",
-        docs: "https://qrzap.fun/docs",
-        endpoints: {
-          "GET /generate": "Generate QR code with query parameters",
-          "POST /generate": "Generate QR code with JSON body",
-        },
-        types: Object.keys(QR_BUILDERS),
-      });
-    }
-
-    if (url.pathname === "/generate") {
-      let params = {};
-
-      if (request.method === "POST") {
-        try {
-          params = await request.json();
-        } catch {
-          return jsonResponse({ error: "Invalid JSON body" }, 400);
-        }
-      } else if (request.method === "GET") {
-        for (const [key, value] of url.searchParams) {
-          params[key] = value;
-        }
-      } else {
-        return jsonResponse({ error: "Method not allowed" }, 405);
-      }
-
-      return handleGenerate(params);
-    }
-
-    return jsonResponse({ error: "Not found" }, 404);
-  },
+export const POST: APIRoute = async ({ request }) => {
+  try {
+    const params = (await request.json()) as Record<string, string>;
+    return handleGenerate(params);
+  } catch {
+    return jsonError("Invalid JSON body");
+  }
 };

@@ -245,7 +245,7 @@ export default function DocsPage() {
             <CardContent className="p-6 space-y-6">
               <div>
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-medium">Base URL</p>
-                <CodeBlock>{`https://api.qrzap.fun`}</CodeBlock>
+                <CodeBlock>{`https://qrzap.fun/api`}</CodeBlock>
               </div>
 
               <div>
@@ -270,14 +270,14 @@ export default function DocsPage() {
             <Card className="border-border/30">
               <CardContent className="p-5">
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-medium">cURL - GET (returns PNG)</p>
-                <CodeBlock>{`curl "https://api.qrzap.fun/generate?type=url&url=https://qrzap.fun" -o qr.png`}</CodeBlock>
+                <CodeBlock>{`curl "https://qrzap.fun/api/generate?type=url&url=https://qrzap.fun" -o qr.png`}</CodeBlock>
               </CardContent>
             </Card>
 
             <Card className="border-border/30">
               <CardContent className="p-5">
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-medium">cURL - POST with JSON</p>
-                <CodeBlock>{`curl -X POST https://api.qrzap.fun/generate \\
+                <CodeBlock>{`curl -X POST https://qrzap.fun/api/generate \\
   -H "Content-Type: application/json" \\
   -d '{"type":"wifi","ssid":"MyNetwork","password":"secret123"}' \\
   -o wifi-qr.png`}</CodeBlock>
@@ -287,14 +287,14 @@ export default function DocsPage() {
             <Card className="border-border/30">
               <CardContent className="p-5">
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-medium">SVG format</p>
-                <CodeBlock>{`curl "https://api.qrzap.fun/generate?type=url&url=https://qrzap.fun&format=svg" -o qr.svg`}</CodeBlock>
+                <CodeBlock>{`curl "https://qrzap.fun/api/generate?type=url&url=https://qrzap.fun&format=svg" -o qr.svg`}</CodeBlock>
               </CardContent>
             </Card>
 
             <Card className="border-border/30">
               <CardContent className="p-5">
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-medium">JavaScript / Fetch</p>
-                <CodeBlock>{`const res = await fetch("https://api.qrzap.fun/generate", {
+                <CodeBlock>{`const res = await fetch("https://qrzap.fun/api/generate", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
@@ -315,7 +315,7 @@ const blob = await res.blob();
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-medium">Python</p>
                 <CodeBlock>{`import requests
 
-response = requests.post("https://api.qrzap.fun/generate", json={
+response = requests.post("https://qrzap.fun/api/generate", json={
     "type": "email",
     "email": "hello@example.com",
     "subject": "Hello"
@@ -329,7 +329,7 @@ with open("qr.png", "wb") as f:
             <Card className="border-border/30">
               <CardContent className="p-5">
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-medium">HTML - Inline Image</p>
-                <CodeBlock>{`<img src="https://api.qrzap.fun/generate?type=url&url=https://qrzap.fun"
+                <CodeBlock>{`<img src="https://qrzap.fun/api/generate?type=url&url=https://qrzap.fun"
      alt="QR Code" width="200" height="200" />`}</CodeBlock>
               </CardContent>
             </Card>
@@ -358,14 +358,12 @@ with open("qr.png", "wb") as f:
         </Section>
 
         {/* Self-Host */}
-        <Section title="Self-Host the API">
+        <Section title="Self-Host">
           <p className="text-sm text-muted-foreground">
-            The API worker is included in the repository. Deploy your own instance:
+            The entire project is open source. Clone and deploy your own instance:
           </p>
-          <CodeBlock>{`# Clone and deploy to Cloudflare Workers
-git clone https://github.com/pranav-bhatkar/qrzap.git
-cd qrzap/api
-npx wrangler deploy worker.js --name qrzap-api`}</CodeBlock>
+          <CodeBlock>{`git clone https://github.com/pranav-bhatkar/qrzap.git
+cd qrzap && npm install && npm run build`}</CodeBlock>
         </Section>
 
         {/* CTA */}
