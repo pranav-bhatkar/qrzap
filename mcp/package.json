@@ -1,13 +1,15 @@
 {
   "name": "qrzap-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for generating QR codes - URL, WiFi, phone, email, SMS, vCard, text",
   "type": "module",
   "bin": {
-    "qrzap-mcp": "./server.mjs"
+    "qrzap-mcp": "./bin.js"
   },
   "files": [
-    "server.mjs"
+    "bin.js",
+    "server.mjs",
+    "README.md"
   ],
   "keywords": [
     "mcp",

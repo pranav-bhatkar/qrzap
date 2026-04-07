@@ -1,43 +1,81 @@
-# Astro Starter Kit: Minimal
+# QRzap
 
-```sh
-npm create astro@latest -- --template minimal
+Free, open-source QR code generator with a web UI, REST API, and MCP server.
+
+Supports URL, WiFi, phone, email, SMS, vCard, and plain text.
+
+**[qrzap.fun](https://qrzap.fun)** | **[Docs](https://qrzap.fun/docs)** | **[API Reference](https://qrzap.fun/docs/reference)** | **[npm](https://www.npmjs.com/package/qrzap-mcp)**
+
+## Features
+
+- **Web UI** - Generate and download QR codes instantly. Customize colors, size, error correction.
+- **REST API** - `GET /api/generate?type=url&url=...` returns SVG. No API key, CORS enabled.
+- **MCP Server** - `npx qrzap-mcp` adds QR generation to any AI agent. Works with Claude, Cursor, VS Code.
+- **7 QR types** - URL, WiFi, phone, email, SMS, vCard, text. Structured params (pass `ssid` and `password`, not raw WiFi strings).
+- **Download formats** - PNG, SVG, JPEG, WebP from the web UI.
+- **Privacy** - Everything runs client-side. No data stored. No tracking.
+
+## MCP Server
+
+One command to add QR code generation to any AI client:
+
+```bash
+# Claude Code
+claude mcp add qrzap -- npx qrzap-mcp@latest
+
+# Claude Desktop / Cursor / VS Code (add to config JSON)
+{
+  "mcpServers": {
+    "qrzap": {
+      "command": "npx",
+      "args": ["qrzap-mcp@latest"]
+    }
+  }
+}
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Then ask: *"Generate a QR code for my WiFi network MyWiFi with password secret123"*
 
-## 🚀 Project Structure
+## REST API
 
-Inside of your Astro project, you'll see the following folders and files:
+```bash
+# URL QR code
+curl "https://qrzap.fun/api/generate?type=url&url=https://example.com" -o qr.svg
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+# WiFi QR code
+curl -X POST https://qrzap.fun/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"type":"wifi","ssid":"MyNetwork","password":"secret123"}' \
+  -o wifi.svg
+
+# Embed in HTML
+<img src="https://qrzap.fun/api/generate?type=url&url=https://example.com" width="200" />
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Run locally
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```bash
+git clone https://github.com/pranav-bhatkar/qrzap.git
+cd qrzap
+npm install
+npm run dev
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Tech stack
 
-## 🧞 Commands
+- [Astro](https://astro.build) + [React](https://react.dev)
+- [shadcn/ui](https://ui.shadcn.com) + [Tailwind CSS](https://tailwindcss.com)
+- [qrcode](https://www.npmjs.com/package/qrcode) (generation)
+- [Cloudflare Pages](https://pages.cloudflare.com) (hosting)
+- [MCP SDK](https://modelcontextprotocol.io) (AI agent integration)
 
-All commands are run from the root of the project, from a terminal:
+## Support
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+If you find QRzap useful, consider supporting the project:
 
-## 👀 Want to learn more?
+- [Buy Me a Coffee](https://buymeacoffee.com/pranavbhatkar)
+- [Razorpay](https://razorpay.me/@pranavbhatkar)
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## License
+
+MIT
