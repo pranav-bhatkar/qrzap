@@ -873,7 +873,7 @@ export default function QRGenerator() {
 
           {/* ===== RIGHT: QR preview ===== */}
           <div className="md:sticky md:top-20 md:self-start flex flex-col items-center gap-3">
-            <div className="w-[200px] h-[200px] md:w-full md:max-w-[360px] md:aspect-square rounded-lg bg-muted/20 border border-border/20 flex items-center justify-center p-3">
+            <div className="w-[200px] h-[200px] md:w-[340px] md:h-[340px] rounded-lg bg-muted/20 border border-border/20 flex items-center justify-center p-3">
               {qrDataUrl ? (
                 <img
                   src={qrDataUrl}
