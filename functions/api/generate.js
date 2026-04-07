@@ -45,14 +45,14 @@ async function handleGenerate(params) {
   const ec = ["L", "M", "Q", "H"].includes(params.errorCorrection) ? params.errorCorrection : "M";
   const format = params.format === "svg" ? "svg" : "png";
   try {
-    if (format === "svg") {
-      const svg = await QRCode.toString(data, { type: "svg", width: size, margin: 2, errorCorrectionLevel: ec });
-      return new Response(svg, { headers: { "Content-Type": "image/svg+xml", ...CORS } });
-    }
-    const dataUrl = await QRCode.toDataURL(data, { width: size, margin: 2, errorCorrectionLevel: ec });
-    const base64 = dataUrl.replace(/^data:image\/png;base64,/, "");
-    const binary = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
-    return new Response(binary, { headers: { "Content-Type": "image/png", ...CORS } });
+    const svg = await QRCode.toString(data, { type: "svg", width: size, margin: 2, errorCorrectionLevel: ec });
+    return new Response(svg, {
+      headers: {
+        "Content-Type": "image/svg+xml",
+        "Cache-Control": "public, max-age=86400",
+        ...CORS,
+      },
+    });
   } catch (err) {
     return new Response(JSON.stringify({ error: `Failed: ${err.message}` }), { status: 500, headers: { "Content-Type": "application/json", ...CORS } });
   }

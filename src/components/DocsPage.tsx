@@ -156,7 +156,7 @@ export default function DocsPage() {
               </div>
 
               <p className="text-xs text-muted-foreground">
-                Returns <code className="bg-muted/50 px-1 rounded text-[10px]">image/png</code> by default. Add <code className="bg-muted/50 px-1 rounded text-[10px]">format=svg</code> for vector output.{" "}
+                Returns <code className="bg-muted/50 px-1 rounded text-[10px]">image/svg+xml</code> (vector SVG). Works as an image source in HTML, Markdown, and any browser.{" "}
                 <a href="/docs/reference" className="underline underline-offset-2 hover:text-foreground">See all parameters</a>
               </p>
             </section>
