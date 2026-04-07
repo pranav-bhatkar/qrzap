@@ -1,0 +1,62 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { QrIcon, HeartIcon } from "../components/icons";
+
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<Layout title="QRzap Blog" description="Guides, tutorials, and tips for QR code generation.">
+  <div class="bg-background">
+    <!-- Nav -->
+    <nav class="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/40">
+      <div class="flex items-center justify-between px-4 md:px-8 py-3 max-w-6xl mx-auto">
+        <a href="/" class="flex items-center gap-2">
+          <QrIcon className="w-4 h-4" />
+          <span class="text-sm font-semibold tracking-tight">QRzap</span>
+        </a>
+        <div class="flex items-center gap-3 text-xs text-zinc-500">
+          <a href="/docs" class="hover:text-white transition-colors">API</a>
+          <a href="/blogs" class="text-white">Blog</a>
+          <a href="/support" class="hover:text-white transition-colors flex items-center gap-1">
+            <HeartIcon className="w-3 h-3" />Support
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="px-4 md:px-8 lg:px-12 py-10 max-w-3xl mx-auto">
+      <div class="mb-10">
+        <h1 class="text-3xl font-bold tracking-tight mb-2">Blog</h1>
+        <p class="text-sm text-zinc-500">Guides, tutorials, and tips for QR codes.</p>
+      </div>
+
+      <div class="space-y-8">
+        {posts.map((post) => (
+          <a href={`/${post.id}`} class="block group">
+            <article class="space-y-2">
+              <time class="text-[10px] uppercase tracking-widest text-zinc-600">
+                {post.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+              </time>
+              <h2 class="text-lg font-semibold tracking-tight group-hover:text-zinc-300 transition-colors">
+                {post.data.title}
+              </h2>
+              <p class="text-sm text-zinc-500 leading-relaxed">{post.data.description}</p>
+              <div class="flex gap-2 pt-1">
+                {post.data.tags.map((tag) => (
+                  <span class="text-[10px] uppercase tracking-widest text-zinc-600 bg-zinc-800/50 px-2 py-0.5 rounded">{tag}</span>
+                ))}
+              </div>
+            </article>
+          </a>
+        ))}
+      </div>
+
+      {posts.length === 0 && (
+        <p class="text-zinc-600 text-sm">No posts yet. Check back soon.</p>
+      )}
+    </main>
+  </div>
+</Layout>
