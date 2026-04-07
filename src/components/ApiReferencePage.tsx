@@ -14,7 +14,7 @@ function CopyButton({ text }: { text: string }) {
 function Code({ children }: { children: string }) {
   return (
     <div className="relative rounded-lg border border-border/20 overflow-hidden">
-      <pre className="p-4 text-xs font-mono leading-relaxed text-foreground/80 overflow-x-auto"><code>{children}</code></pre>
+      <pre className="p-4 text-xs font-mono leading-relaxed text-foreground/80 overflow-x-auto whitespace-pre-wrap break-all"><code>{children}</code></pre>
       <CopyButton text={children} />
     </div>
   );
@@ -56,7 +56,7 @@ export default function ApiReferencePage() {
         </div>
       </nav>
 
-      <main className="flex-grow px-5 py-10 max-w-6xl mx-auto w-full">
+      <main className="flex-grow px-4 md:px-8 py-10 max-w-6xl mx-auto w-full">
         <div className="grid md:grid-cols-[180px_1fr] gap-10">
           <aside className="hidden md:block">
             <div className="sticky top-16 space-y-1">
@@ -70,7 +70,7 @@ export default function ApiReferencePage() {
             </div>
           </aside>
 
-          <div className="space-y-14 max-w-2xl">
+          <div className="space-y-14 max-w-2xl min-w-0">
             <div>
               <h1 className="text-2xl font-bold tracking-tight mb-2">API Reference</h1>
               <p className="text-sm text-muted-foreground">Complete parameter reference for the QRzap REST API and MCP tool.</p>
@@ -95,8 +95,8 @@ export default function ApiReferencePage() {
             {/* Common params */}
             <section id="common" className="space-y-3">
               <h2 className="text-base font-semibold tracking-tight">Common Parameters</h2>
-              <div className="rounded-lg border border-border/20 overflow-hidden">
-                <table className="w-full text-xs">
+              <div className="rounded-lg border border-border/20 overflow-x-auto">
+                <table className="w-full text-xs min-w-[400px]">
                   <thead><tr className="border-b border-border/10 text-left text-[10px] uppercase tracking-widest text-muted-foreground/50">
                     <th className="px-4 py-2 font-medium">Param</th>
                     <th className="px-4 py-2 font-medium">Type</th>

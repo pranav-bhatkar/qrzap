@@ -18,7 +18,7 @@ function Code({ children, title }: { children: string; title?: string }) {
   return (
     <div className="relative rounded-lg border border-border/20 overflow-hidden">
       {title && <div className="px-3 py-1.5 bg-muted/20 border-b border-border/10 text-[9px] uppercase tracking-widest text-muted-foreground/50 font-medium">{title}</div>}
-      <pre className="p-4 text-xs font-mono leading-relaxed text-foreground/80 overflow-x-auto"><code>{children}</code></pre>
+      <pre className="p-4 text-xs font-mono leading-relaxed text-foreground/80 overflow-x-auto whitespace-pre-wrap break-all"><code>{children}</code></pre>
       <CopyButton text={children} />
     </div>
   );
@@ -50,7 +50,7 @@ export default function DocsPage() {
         </div>
       </nav>
 
-      <main className="flex-grow px-5 py-10 max-w-6xl mx-auto w-full">
+      <main className="flex-grow px-4 md:px-8 py-10 max-w-6xl mx-auto w-full">
         <div className="grid md:grid-cols-[180px_1fr] gap-10">
 
           {/* TOC - left sidebar */}
@@ -72,7 +72,7 @@ export default function DocsPage() {
           </aside>
 
           {/* Content */}
-          <div className="space-y-16 max-w-2xl">
+          <div className="space-y-16 max-w-2xl min-w-0">
 
             {/* Header */}
             <div>
