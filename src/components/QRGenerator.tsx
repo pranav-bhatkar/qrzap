@@ -159,7 +159,7 @@ export default function QRGenerator() {
   }, [qrDataUrl]);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="bg-background">
       {/* Nav */}
       <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/40">
         <div className="flex items-center justify-between px-5 py-3 max-w-6xl mx-auto">
@@ -175,7 +175,7 @@ export default function QRGenerator() {
       </nav>
 
       {/* Main: two-column, always side by side on md+ */}
-      <main className="flex-grow px-5 py-6 max-w-6xl mx-auto w-full">
+      <main className="px-5 py-6 max-w-6xl mx-auto w-full">
         {/* Hero */}
         <div className="text-center pt-6 pb-10">
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">Create QR Code</h1>
@@ -308,11 +308,6 @@ export default function QRGenerator() {
         </div>
       </main>
 
-      <footer className="border-t border-border/30 mt-auto">
-        <div className="flex items-center justify-between px-5 py-2.5 max-w-6xl mx-auto text-[9px] uppercase tracking-widest text-muted-foreground/30">
-          <span>QRzap</span><span>No data stored</span>
-        </div>
-      </footer>
     </div>
   );
 }

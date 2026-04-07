@@ -1,8 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import QRGenerator from '../components/QRGenerator';
+import LandingSections from '../components/LandingSections';
 ---
 
 <Layout title="QRzap — Free QR Code Generator">
   <QRGenerator client:load />
+  <LandingSections client:visible />
+  <footer class="border-t border-zinc-800/30">
+    <div class="flex items-center justify-between px-5 py-4 max-w-6xl mx-auto text-[9px] uppercase tracking-[0.2em] text-zinc-600">
+      <span>QRzap</span>
+      <span>No data stored</span>
+    </div>
+  </footer>
 </Layout>
