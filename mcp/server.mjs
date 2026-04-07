@@ -207,6 +207,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       width: size,
       margin: 2,
       errorCorrectionLevel: errorCorrection,
+      color: { dark: "#000000", light: "#ffffff" },
     });
 
     const base64 = dataUrl.replace(/^data:image\/png;base64,/, "");
@@ -220,7 +221,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         },
         {
           type: "text",
-          text: `[QR Code generated as PNG (${size}x${size}px)]\n\nTo save this as a file, write the following base64 data to a .png file:\n\n${base64}`,
+          text: `[QR Code generated as PNG (${size}x${size}px)]\n\nBase64 PNG data (use: echo '<data>' | base64 -d > qr.png):\n\nDATA_START\n${base64}\nDATA_END`,
         },
       ],
     };
