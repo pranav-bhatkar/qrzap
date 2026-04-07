@@ -1,13 +1,19 @@
 ---
-import '../styles/global.css'
+import "../styles/global.css";
 
 interface Props {
   title: string;
   description?: string;
 }
 
-const { title, description = "Free QR code generator with web UI, REST API, and MCP server. Supports URL, WiFi, phone, email, SMS, vCard." } = Astro.props;
-const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://qrzap.fun");
+const {
+  title,
+  description = "Free QR code generator with web UI, REST API, and MCP server. Supports URL, WiFi, phone, email, SMS, vCard.",
+} = Astro.props;
+const canonicalURL = new URL(
+  Astro.url.pathname,
+  Astro.site || "https://qrzap.fun",
+);
 ---
 
 <!doctype html>
@@ -22,7 +28,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://qrzap.fu
 
     <!-- SEO -->
     <meta name="author" content="Pranav Bhatkar" />
-    <meta name="keywords" content="QR code generator, free QR code, WiFi QR, vCard QR, MCP server, REST API, QR code API, qrzap" />
+    <meta
+      name="keywords"
+      content="QR code generator, free QR code, WiFi QR, vCard QR, MCP server, REST API, QR code API, qrzap"
+    />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#09090b" />
 
@@ -42,31 +51,49 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://qrzap.fu
     <meta name="twitter:image" content="https://qrzap.fun/og.png" />
 
     <!-- Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "QRzap",
-      "url": "https://qrzap.fun",
-      "description": description,
-      "applicationCategory": "UtilityApplication",
-      "operatingSystem": "Any",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-      "author": { "@type": "Person", "name": "Pranav Bhatkar", "url": "https://pranavbhatkar.me" },
-    })} />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        name: "QRzap",
+        url: "https://qrzap.fun",
+        description: description,
+        applicationCategory: "UtilityApplication",
+        operatingSystem: "Any",
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        author: {
+          "@type": "Person",
+          name: "Pranav Bhatkar",
+          url: "https://pranavbhatkar.me",
+        },
+      })}
+    />
 
     <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CT9SKT4PML"
+    ></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-CT9SKT4PML");
     </script>
   </head>
   <body class="min-h-screen antialiased flex flex-col">
     <div class="hidden lg:flex max-w-6xl mx-auto relative">
-      <div class="fixed top-0 bottom-0 w-4 stripe-pattern border-x border-zinc-800/40 z-40" style="left: calc((100vw - 72rem) / 2 - 1rem);"></div>
-      <div class="fixed top-0 bottom-0 w-4 stripe-pattern border-x border-zinc-800/40 z-40" style="right: calc((100vw - 72rem) / 2 - 1rem);"></div>
+      <div
+        class="fixed top-0 bottom-0 w-4 stripe-pattern border-x border-zinc-800/40 z-40"
+        style="left: calc((100vw - 72rem) / 2 - 1rem);"
+      >
+      </div>
+      <div
+        class="fixed top-0 bottom-0 w-4 stripe-pattern border-x border-zinc-800/40 z-40"
+        style="right: calc((100vw - 72rem) / 2 - 1rem);"
+      >
+      </div>
     </div>
 
     <div class="flex-grow">
@@ -74,7 +101,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://qrzap.fu
     </div>
 
     <footer>
-      <div class="flex flex-col items-center gap-4 px-5 py-10 max-w-6xl mx-auto">
+      <div
+        class="flex flex-col items-center gap-4 px-5 py-10 max-w-6xl mx-auto"
+      >
         <a
           href="https://www.pranavbhatkar.me"
           aria-label="Pranav Bhatkar's Portfolio"
@@ -87,7 +116,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://qrzap.fu
             <p class="bhatkar">Bhatkar</p>
           </div>
         </a>
-        <div class="flex items-center gap-4 text-[9px] uppercase tracking-[0.2em] text-zinc-600">
+        <div
+          class="flex items-center gap-4 text-[9px] uppercase tracking-[0.2em] text-zinc-600"
+        >
           <span>QRzap</span>
           <span>&middot;</span>
           <span>&copy; {new Date().getFullYear()}</span>
@@ -96,7 +127,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://qrzap.fu
         </div>
       </div>
       <div class="max-w-6xl mx-auto">
-        <div class="relative w-full h-4 border-y border-y-zinc-800 bg-[repeating-linear-gradient(315deg,rgb(39,39,42)_0,rgb(39,39,42)_1px,transparent_0,transparent_50%)] bg-[length:10px_10px] bg-fixed md:h-6"></div>
+        <div
+          class="relative w-full h-4 border-y border-y-zinc-800 bg-[repeating-linear-gradient(315deg,rgb(39,39,42)_0,rgb(39,39,42)_1px,transparent_0,transparent_50%)] bg-[length:10px_10px] bg-fixed md:h-6"
+        >
+        </div>
       </div>
     </footer>
   </body>
