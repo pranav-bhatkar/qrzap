@@ -26,3 +26,8 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# private skills (not for public repo)
+.claude/skills/blog-writer/
+.claude/skills/Humanizer/
+.claude/skills/integration-astro-hybrid/
