@@ -242,8 +242,24 @@ export default function QRGenerator() {
 
           {/* ===== LEFT: all settings ===== */}
           <div className="space-y-5">
-            {/* Type pills */}
-            <div className="flex flex-wrap gap-1">
+            {/* Type selector: dropdown on mobile, pills on md+ */}
+            <div className="md:hidden">
+              <Select value={activeType} onValueChange={(v) => setActiveType(v as QRType)}>
+                <SelectTrigger className="bg-muted/30 border-border/20 text-sm w-full">
+                  <div className="flex items-center gap-2">
+                    {(() => { const t = QR_TYPES.find((x) => x.id === activeType); return t ? <><t.Icon className="w-3.5 h-3.5" />{t.label}</> : null; })()}
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  {QR_TYPES.map((t) => (
+                    <SelectItem key={t.id} value={t.id}>
+                      <span className="flex items-center gap-2"><t.Icon className="w-3.5 h-3.5" />{t.label}</span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="hidden md:flex flex-wrap gap-1">
               {QR_TYPES.map((t) => (
                 <button key={t.id} onClick={() => setActiveType(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
