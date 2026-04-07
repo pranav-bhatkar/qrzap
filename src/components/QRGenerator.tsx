@@ -120,6 +120,48 @@ function TypeFields({ type, fields, onChange }: { type: QRType; fields: Record<s
   }
 }
 
+function NavBar() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <div className="fixed inset-x-0 top-0 z-50 max-w-6xl w-full mx-auto lg:px-0">
+      <nav
+        style={{
+          width: scrolled ? "90%" : "100%",
+          transform: scrolled ? "translateY(10px)" : "translateY(0)",
+          transition: "width 0.4s cubic-bezier(0.32, 0.72, 0, 1), transform 0.4s cubic-bezier(0.32, 0.72, 0, 1), background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease",
+        }}
+        className={`mx-auto flex items-center justify-between px-8 lg:px-12 py-3 ${
+          scrolled
+            ? "rounded-lg bg-zinc-900/95 backdrop-blur-sm border border-zinc-800/50 shadow-lg shadow-black/20"
+            : "bg-transparent border border-transparent border-b-zinc-800"
+        }`}
+      >
+        <a href="https://pranavbhatkar.me" target="_blank" rel="noopener noreferrer" className="header-logo">
+          <span className="header-logo-icon"><QrIcon className="w-4 h-4" /></span>
+          <div className="header-logo-text">
+            <p className="header-logo-qrzap">QRzap <span className="text-zinc-500">by</span></p>
+            <p className="header-logo-pranav">Pranav</p>
+            <p className="header-logo-bhatkar">Bhatkar</p>
+          </div>
+        </a>
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          <a href="/docs" className="rounded px-3 py-2 hover:bg-secondary hover:brightness-125 transition-all duration-300">API</a>
+          <a href="/support" className="rounded px-3 py-2 hover:bg-secondary hover:brightness-125 transition-all duration-300 flex items-center gap-1">
+            <HeartIcon className="w-3 h-3" />Support
+          </a>
+        </div>
+      </nav>
+    </div>
+  );
+}
+
 export default function QRGenerator() {
   const [activeType, setActiveType] = useState<QRType>("url");
   const [fields, setFields] = useState<Record<string, string>>({ url: "" });
@@ -160,22 +202,12 @@ export default function QRGenerator() {
 
   return (
     <div className="bg-background">
-      {/* Nav */}
-      <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/40">
-        <div className="flex items-center justify-between px-5 py-3 max-w-6xl mx-auto">
-          <a href="/" className="flex items-center gap-2">
-            <QrIcon className="w-4 h-4" />
-            <span className="text-sm font-semibold tracking-tight">QRzap</span>
-          </a>
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <a href="/docs" className="hover:text-foreground transition-colors">API</a>
-            <a href="/support" className="hover:text-foreground transition-colors flex items-center gap-1"><HeartIcon className="w-3 h-3" />Support</a>
-          </div>
-        </div>
-      </nav>
+      {/* Nav - static at top, floats on scroll */}
+      <NavBar />
+      <div className="h-20" />
 
       {/* Main: two-column, always side by side on md+ */}
-      <main className="px-5 py-6 max-w-6xl mx-auto w-full">
+      <main className="px-8 lg:px-12 py-6 max-w-6xl mx-auto w-full">
         {/* Hero */}
         <div className="text-center pt-6 pb-10">
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">Create QR Code</h1>
@@ -240,7 +272,7 @@ export default function QRGenerator() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <div className="flex justify-between"><Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Size</Label><span className="text-[10px] font-mono text-muted-foreground">{options.size}</span></div>
-                      <Slider value={[options.size]} onValueChange={([v]) => setOptions((p) => ({ ...p, size: v }))} min={128} max={512} step={8} />
+                      <Slider value={[options.size]} onValueChange={(v: number | number[]) => setOptions((p) => ({ ...p, size: Array.isArray(v) ? v[0] : v }))} min={128} max={512} step={8} />
                     </div>
                     <div className="space-y-2">
                       <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Error Correction</Label>

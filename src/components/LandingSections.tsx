@@ -160,7 +160,7 @@ function APIPlayground() {
   const hasData = (type === "url" && params.url) || (type === "phone" && params.phone) || (type === "wifi" && params.ssid) || (type === "email" && params.email);
 
   return (
-    <Section id="api-playground" className="border-t border-border/10">
+    <Section id="api-playground" className="">
       <SectionLabel>REST API</SectionLabel>
       <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">Build your API link</h2>
       <p className="text-sm text-muted-foreground mb-8 max-w-lg">
@@ -267,7 +267,7 @@ function FeaturesSection() {
   ];
 
   return (
-    <Section id="features" className="border-t border-border/10">
+    <Section id="features" className="">
       <div className="text-center mb-12">
         <SectionLabel>Why QRzap</SectionLabel>
         <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Built for developers</h2>
@@ -288,7 +288,7 @@ function FeaturesSection() {
 // === Open Source CTA ===
 function OpenSourceCTA() {
   return (
-    <Section id="opensource" className="border-t border-border/10">
+    <Section id="opensource" className="">
       <div className="text-center max-w-lg mx-auto">
         <SectionLabel>Open Source</SectionLabel>
         <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">Built in the open</h2>
@@ -324,9 +324,13 @@ function OpenSourceCTA() {
 export default function LandingSections() {
   return (
     <>
+      <div className="max-w-6xl mx-auto"><div className="border-t border-zinc-800/40" /></div>
       <MCPSection />
+      <div className="max-w-6xl mx-auto"><div className="border-t border-zinc-800/40" /></div>
       <APIPlayground />
+      <div className="max-w-6xl mx-auto"><div className="border-t border-zinc-800/40" /></div>
       <FeaturesSection />
+      <div className="max-w-6xl mx-auto"><div className="border-t border-zinc-800/40" /></div>
       <OpenSourceCTA />
     </>
   );

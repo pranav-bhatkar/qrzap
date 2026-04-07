@@ -16,8 +16,26 @@ const { title } = Astro.props;
     <meta name="description" content="Generate QR codes for URLs, WiFi, phone numbers, email, SMS, vCards and more." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content="Free QR code generator with web UI, REST API, and MCP server. Supports URL, WiFi, phone, email, SMS, vCard." />
+    <meta property="og:image" content="https://qrzap.fun/og.png" />
+    <meta property="og:url" content="https://qrzap.fun" />
+    <meta property="og:site_name" content="QRzap" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content="Free QR code generator with web UI, REST API, and MCP server." />
+    <meta name="twitter:image" content="https://qrzap.fun/og.png" />
   </head>
   <body class="min-h-screen antialiased">
+    <div class="hidden lg:flex max-w-6xl mx-auto relative">
+      <div class="fixed top-0 bottom-0 w-4 stripe-pattern border-x border-zinc-800/40 z-40" style="left: calc((100vw - 72rem) / 2 - 1rem);"></div>
+      <div class="fixed top-0 bottom-0 w-4 stripe-pattern border-x border-zinc-800/40 z-40" style="right: calc((100vw - 72rem) / 2 - 1rem);"></div>
+    </div>
     <slot />
   </body>
 </html>

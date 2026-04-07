@@ -1,16 +1,41 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import QRGenerator from '../components/QRGenerator';
-import LandingSections from '../components/LandingSections';
+import Layout from "../layouts/Layout.astro";
+import QRGenerator from "../components/QRGenerator";
+import LandingSections from "../components/LandingSections";
 ---
 
 <Layout title="QRzap — Free QR Code Generator">
   <QRGenerator client:load />
   <LandingSections client:visible />
-  <footer class="border-t border-zinc-800/30">
-    <div class="flex items-center justify-between px-5 py-4 max-w-6xl mx-auto text-[9px] uppercase tracking-[0.2em] text-zinc-600">
-      <span>QRzap</span>
-      <span>No data stored</span>
+  <footer>
+    <div class="flex flex-col items-center gap-4 px-5 py-10 max-w-6xl mx-auto">
+      <a
+        href="https://www.pranavbhatkar.me"
+        aria-label="Pranav Bhatkar's Portfolio"
+        class="logo font-medium font-inter"
+      >
+        <p class="copyright">©</p>
+        <div class="name">
+          <p class="codeBy">Code by</p>
+          <p class="pranav">Pranav</p>
+          <p class="bhatkar">Bhatkar</p>
+        </div>
+      </a>
+      <div
+        class="flex items-center gap-4 text-[9px] uppercase tracking-[0.2em] text-zinc-600"
+      >
+        <span>QRzap</span>
+        <span>&middot;</span>
+        <span>&copy; {new Date().getFullYear()}</span>
+        <span>&middot;</span>
+        <span>No data stored</span>
+      </div>
+    </div>
+    <div class="max-w-6xl mx-auto">
+      <div
+        class="relative w-full h-4 border-y border-y-zinc-800 bg-[repeating-linear-gradient(315deg,rgb(39,39,42)_0,rgb(39,39,42)_1px,transparent_0,transparent_50%)] bg-[length:10px_10px] bg-fixed md:h-6"
+      >
+      </div>
     </div>
   </footer>
 </Layout>
