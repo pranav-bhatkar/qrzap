@@ -1,6 +1,6 @@
 ---
 import "../styles/global.css";
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import PostHog from "../components/posthog.astro";
 import Header from "../components/Header.astro";
 
@@ -38,7 +38,7 @@ const canonicalURL = new URL(
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <ViewTransitions />
+    <ClientRouter />
 
     <!-- SEO -->
     <meta name="author" content="Pranav Bhatkar" />
