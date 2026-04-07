@@ -1,7 +1,7 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
-import { QrIcon, HeartIcon } from "../components/icons";
+import { QrIcon, HeartIcon } from "../../components/icons";
 
 const posts = (await getCollection("blog"))
   .filter((p) => !p.data.draft)
