@@ -1,6 +1,6 @@
 {
   "name": "qrzap-mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MCP server for generating QR codes - URL, WiFi, phone, email, SMS, vCard, text",
   "type": "module",
   "bin": {
@@ -19,6 +19,13 @@
     "claude",
     "ai-tools"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pranav-bhatkar/qrzap",
+    "directory": "mcp"
+  },
+  "homepage": "https://qrzap.fun",
+  "bugs": "https://github.com/pranav-bhatkar/qrzap/issues",
   "author": "Pranav Bhatkar",
   "license": "MIT",
   "dependencies": {
