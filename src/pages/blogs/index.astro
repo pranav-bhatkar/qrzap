@@ -35,7 +35,7 @@ const posts = (await getCollection("blog"))
 
       <div class="space-y-8">
         {posts.map((post) => (
-          <a href={`/${post.id}`} class="block group">
+          <a href={`/blogs/${post.id}`} class="block group">
             <article class="space-y-2">
               <time class="text-[10px] uppercase tracking-widest text-zinc-600">
                 {post.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}

@@ -1,7 +1,7 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout from "../../layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
-import { QrIcon, HeartIcon } from "../components/icons";
+import { QrIcon, HeartIcon } from "../../components/icons";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -42,7 +42,6 @@ const formattedDate = post.data.date.toLocaleDateString("en-US", {
     </nav>
 
     <article class="px-4 md:px-8 lg:px-12 py-10 max-w-3xl mx-auto">
-      <!-- Header -->
       <header class="mb-10">
         <div class="flex items-center gap-3 mb-4">
           <time class="text-[10px] uppercase tracking-widest text-zinc-600">{formattedDate}</time>
@@ -54,7 +53,6 @@ const formattedDate = post.data.date.toLocaleDateString("en-US", {
         <p class="text-zinc-500 text-sm leading-relaxed">{post.data.description}</p>
       </header>
 
-      <!-- Content -->
       <div class="prose prose-invert prose-sm max-w-none
         prose-headings:tracking-tight prose-headings:font-semibold
         prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4
@@ -71,7 +69,6 @@ const formattedDate = post.data.date.toLocaleDateString("en-US", {
         <Content />
       </div>
 
-      <!-- Back link -->
       <div class="mt-12 pt-6 border-t border-zinc-800/30">
         <a href="/blogs" class="text-xs text-zinc-500 hover:text-white transition-colors">
           &larr; All posts
