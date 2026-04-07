@@ -1,6 +1,6 @@
 {
   "name": "qrzap-mcp",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "MCP server for generating QR codes - URL, WiFi, phone, email, SMS, vCard, text",
   "type": "module",
   "bin": {
@@ -8,6 +8,7 @@
   },
   "files": [
     "bin.js",
+    "cli.mjs",
     "server.mjs",
     "README.md"
   ],
@@ -29,7 +30,9 @@
   "author": "Pranav Bhatkar",
   "license": "MIT",
   "dependencies": {
+    "@clack/prompts": "^1.2.0",
     "@modelcontextprotocol/sdk": "^1.12.1",
+    "picocolors": "^1.1.1",
     "qrcode": "^1.5.4"
   }
 }
