@@ -114,7 +114,7 @@ export default function DocsPage() {
             {/* REST API */}
             <section id="api" className="space-y-4">
               <h2 className="text-lg font-semibold tracking-tight">REST API</h2>
-              <p className="text-sm text-muted-foreground">Returns a QR code image directly. No API key needed.</p>
+              <p className="text-sm text-muted-foreground">Returns a QR code image directly. No API key needed. Rate limited to 60 requests per minute per IP.</p>
 
               <Code title="GET">{`https://qrzap.fun/api/generate?type=url&url=https://example.com`}</Code>
 

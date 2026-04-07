@@ -191,7 +191,7 @@ function APIPlayground() {
       <SectionLabel>REST API</SectionLabel>
       <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">Build your API link</h2>
       <p className="text-sm text-muted-foreground mb-8 max-w-lg">
-        No API key needed. Just a URL that returns an SVG image. Use it anywhere.
+        No API key needed. Just a URL that returns an SVG image. 60 requests/min per IP.
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-[1fr_240px] gap-8 items-start">

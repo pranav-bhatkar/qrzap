@@ -76,7 +76,20 @@ export default function ApiReferencePage() {
                 <span className="text-muted-foreground/50">JSON body</span>
               </div>
               <p className="text-xs text-muted-foreground">Base URL: <code className="bg-muted/30 px-1.5 rounded font-mono text-[11px]">https://qrzap.fun</code></p>
-              <p className="text-xs text-muted-foreground/60">CORS enabled. No authentication required.</p>
+              <p className="text-xs text-muted-foreground/60">CORS enabled. No authentication required. Rate limited to 60 requests/minute per IP.</p>
+              <div className="mt-3 rounded-lg border border-border/20 overflow-hidden">
+                <table className="w-full text-xs">
+                  <thead><tr className="border-b border-border/10 text-left text-[10px] uppercase tracking-widest text-muted-foreground/50">
+                    <th className="px-3 py-2 font-medium">Header</th>
+                    <th className="px-3 py-2 font-medium">Description</th>
+                  </tr></thead>
+                  <tbody className="text-muted-foreground">
+                    <tr className="border-b border-border/5"><td className="px-3 py-2 font-mono text-foreground/80">X-RateLimit-Limit</td><td className="px-3 py-2">Max requests per window (60)</td></tr>
+                    <tr className="border-b border-border/5"><td className="px-3 py-2 font-mono text-foreground/80">X-RateLimit-Remaining</td><td className="px-3 py-2">Requests left in current window</td></tr>
+                    <tr><td className="px-3 py-2 font-mono text-foreground/80">X-RateLimit-Reset</td><td className="px-3 py-2">Unix timestamp when window resets</td></tr>
+                  </tbody>
+                </table>
+              </div>
             </section>
 
             {/* Common params */}

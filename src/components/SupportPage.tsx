@@ -133,7 +133,7 @@ export default function SupportPage() {
             { label: "Price", value: "Free" },
             { label: "QR Types", value: "7" },
             { label: "API Key", value: "None" },
-            { label: "Tracking", value: "Zero" },
+            { label: "Rate Limit", value: "60/min" },
           ].map((s) => (
             <div key={s.label} className="rounded-xl border border-border/20 bg-card/50 p-5 text-center">
               <p className="text-xl font-bold mb-1">{s.value}</p>
