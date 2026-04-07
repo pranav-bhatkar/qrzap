@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { ViewTransitions } from "astro:transitions";
 import PostHog from "../components/posthog.astro";
 import Header from "../components/Header.astro";
 
@@ -37,6 +38,7 @@ const canonicalURL = new URL(
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <ViewTransitions />
 
     <!-- SEO -->
     <meta name="author" content="Pranav Bhatkar" />
@@ -113,7 +115,7 @@ const canonicalURL = new URL(
 
     {!hideHeader && <Header />}
 
-    <div class="flex-grow">
+    <div class="flex-grow" transition:animate="fade">
       <slot />
     </div>
 
