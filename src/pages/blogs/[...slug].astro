@@ -28,33 +28,33 @@ const formattedDate = post.data.date.toLocaleDateString("en-US", {
     <article class="px-4 md:px-8 lg:px-12 py-10 max-w-3xl mx-auto">
       <header class="mb-10">
         <div class="flex items-center gap-3 mb-4">
-          <time class="text-[10px] uppercase tracking-widest text-zinc-600">{formattedDate}</time>
+          <time class="text-[10px] uppercase tracking-widest text-muted-foreground/60">{formattedDate}</time>
           {post.data.tags.map((tag: string) => (
-            <span class="text-[10px] uppercase tracking-widest text-zinc-600 bg-zinc-800/50 px-2 py-0.5 rounded">{tag}</span>
+            <span class="text-[10px] uppercase tracking-widest text-muted-foreground bg-muted px-2 py-0.5 rounded">{tag}</span>
           ))}
         </div>
         <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mb-3">{post.data.title}</h1>
-        <p class="text-zinc-500 text-sm leading-relaxed">{post.data.description}</p>
+        <p class="text-muted-foreground text-sm leading-relaxed">{post.data.description}</p>
       </header>
 
-      <div class="prose prose-invert prose-sm max-w-none
+      <div class="prose dark:prose-invert prose-sm max-w-none
         prose-headings:tracking-tight prose-headings:font-semibold
         prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4
         prose-h3:text-base prose-h3:mt-6 prose-h3:mb-3
-        prose-p:text-zinc-400 prose-p:leading-relaxed
-        prose-a:text-white prose-a:underline prose-a:underline-offset-2
-        prose-strong:text-white
-        prose-code:text-zinc-300 prose-code:bg-zinc-800/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:before:content-[''] prose-code:after:content-['']
-        prose-pre:bg-zinc-950 prose-pre:border prose-pre:border-zinc-800/30 prose-pre:rounded-lg
-        prose-li:text-zinc-400
-        prose-hr:border-zinc-800/40
-        prose-blockquote:border-zinc-700 prose-blockquote:text-zinc-400
+        prose-p:text-muted-foreground prose-p:leading-relaxed
+        prose-a:text-foreground prose-a:underline prose-a:underline-offset-2
+        prose-strong:text-foreground
+        prose-code:text-foreground/80 prose-code:bg-zinc-100 dark:prose-code:bg-zinc-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:before:content-[''] prose-code:after:content-['']
+        prose-pre:bg-zinc-100 prose-pre:text-zinc-800 dark:prose-pre:bg-zinc-950 dark:prose-pre:text-zinc-300 prose-pre:border prose-pre:border-border prose-pre:rounded-lg
+        prose-li:text-muted-foreground
+        prose-hr:border-border/40
+        prose-blockquote:border-border prose-blockquote:text-muted-foreground
       ">
         <Content />
       </div>
 
       <div class="mt-12 pt-6 border-t border-zinc-800/30">
-        <a href="/blogs" class="text-xs text-zinc-500 hover:text-white transition-colors">
+        <a href="/blogs" class="text-xs text-muted-foreground hover:text-foreground transition-colors">
           &larr; All posts
         </a>
       </div>

@@ -16,9 +16,9 @@ function CopyButton({ text }: { text: string }) {
 
 function Code({ children, title }: { children: string; title?: string }) {
   return (
-    <div className="relative rounded-lg border border-border/20 overflow-hidden">
-      {title && <div className="px-3 py-1.5 bg-muted/20 border-b border-border/10 text-[9px] uppercase tracking-widest text-muted-foreground/50 font-medium">{title}</div>}
-      <pre className="p-4 text-xs font-mono leading-relaxed text-foreground/80 overflow-x-auto whitespace-pre-wrap break-all"><code>{children}</code></pre>
+    <div className="relative rounded-lg border border-border/20 overflow-hidden bg-zinc-950">
+      {title && <div className="px-3 py-1.5 bg-zinc-900 border-b border-zinc-800/30 text-[9px] uppercase tracking-widest text-zinc-500 font-medium">{title}</div>}
+      <pre className="p-4 text-xs font-mono leading-relaxed text-zinc-300 overflow-x-auto whitespace-pre-wrap break-all"><code>{children}</code></pre>
       <CopyButton text={children} />
     </div>
   );

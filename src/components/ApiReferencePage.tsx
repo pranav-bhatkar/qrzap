@@ -13,8 +13,8 @@ function CopyButton({ text }: { text: string }) {
 
 function Code({ children }: { children: string }) {
   return (
-    <div className="relative rounded-lg border border-border/20 overflow-hidden">
-      <pre className="p-4 text-xs font-mono leading-relaxed text-foreground/80 overflow-x-auto whitespace-pre-wrap break-all"><code>{children}</code></pre>
+    <div className="relative rounded-lg border border-border/20 overflow-hidden bg-zinc-950">
+      <pre className="p-4 text-xs font-mono leading-relaxed text-zinc-300 overflow-x-auto whitespace-pre-wrap break-all"><code>{children}</code></pre>
       <CopyButton text={children} />
     </div>
   );

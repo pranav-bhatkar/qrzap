@@ -20,7 +20,7 @@ function CopyBtn({ text, className = "", onCopy }: { text: string; className?: s
 // --- Terminal block ---
 function Terminal({ command, title }: { command: string; title: string }) {
   return (
-    <div className="rounded-xl border border-border/20 bg-zinc-950 overflow-hidden">
+    <div className="rounded-xl border border-border bg-zinc-950 overflow-hidden">
       <div className="flex items-center justify-between px-4 py-2 border-b border-border/10">
         <div className="flex items-center gap-2">
           <div className="flex gap-1.5">
@@ -124,7 +124,7 @@ function MCPSection() {
           {active.id === "claude-code" ? (
             <Terminal command={active.cmd} title="Terminal" />
           ) : (
-            <div className="rounded-xl border border-border/20 bg-zinc-950 overflow-hidden">
+            <div className="rounded-xl border border-border bg-zinc-950 overflow-hidden">
               <div className="flex items-center justify-between px-4 py-2 border-b border-border/10">
                 <span className="text-[10px] text-muted-foreground/40">
                   {active.id === "cursor" ? ".cursor/mcp.json" : "claude_desktop_config.json"}
@@ -211,7 +211,7 @@ function APIPlayground() {
             ))}
           </div>
 
-          <div className="rounded-xl border border-border/20 bg-card/50 p-5 space-y-3">
+          <div className="rounded-xl border border-border bg-card p-5 space-y-3">
             {type === "url" && (
               <div className="space-y-1.5">
                 <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">URL</Label>
@@ -245,7 +245,7 @@ function APIPlayground() {
           </div>
 
           {/* Generated URL */}
-          <div className="rounded-xl border border-border/20 bg-zinc-950 overflow-hidden">
+          <div className="rounded-xl border border-border bg-zinc-950 overflow-hidden">
             <div className="flex items-center justify-between px-4 py-2 border-b border-border/10">
               <span className="text-[10px] text-muted-foreground/40">Generated URL</span>
               <CopyBtn text={apiUrl} onCopy={() => window.posthog?.capture("api_url_copied", { qr_type: type })} />
@@ -256,7 +256,7 @@ function APIPlayground() {
           </div>
 
           {/* Embed code */}
-          <div className="rounded-xl border border-border/20 bg-zinc-950 overflow-hidden">
+          <div className="rounded-xl border border-border bg-zinc-950 overflow-hidden">
             <div className="flex items-center justify-between px-4 py-2 border-b border-border/10">
               <span className="text-[10px] text-muted-foreground/40">HTML Embed</span>
               <CopyBtn text={`<img src="${apiUrl}" alt="QR Code" width="200" />`} />
@@ -267,7 +267,7 @@ function APIPlayground() {
 
         {/* Live QR preview */}
         <div className="md:sticky md:top-20 flex flex-col items-center gap-3">
-          <div className="w-[180px] h-[180px] md:w-full md:aspect-square md:max-w-[240px] rounded-xl bg-muted/10 border border-border/20 flex items-center justify-center p-4">
+          <div className="w-[180px] h-[180px] md:w-full md:aspect-square md:max-w-[240px] rounded-xl bg-muted/30 border border-border flex items-center justify-center p-4">
             {hasData ? (
               <img src={apiUrl} alt="QR Preview" className="w-full h-full object-contain" />
             ) : (

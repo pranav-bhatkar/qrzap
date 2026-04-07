@@ -21,16 +21,16 @@ const posts = (await getCollection("blog"))
         {posts.map((post) => (
           <a href={`/blogs/${post.id}`} class="block group">
             <article class="space-y-2">
-              <time class="text-[10px] uppercase tracking-widest text-zinc-600">
+              <time class="text-[10px] uppercase tracking-widest text-muted-foreground/60">
                 {post.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
               </time>
-              <h2 class="text-lg font-semibold tracking-tight group-hover:text-zinc-300 transition-colors">
+              <h2 class="text-lg font-semibold tracking-tight group-hover:text-primary/70 transition-colors">
                 {post.data.title}
               </h2>
-              <p class="text-sm text-zinc-500 leading-relaxed">{post.data.description}</p>
+              <p class="text-sm text-muted-foreground leading-relaxed">{post.data.description}</p>
               <div class="flex gap-2 pt-1">
                 {post.data.tags.map((tag) => (
-                  <span class="text-[10px] uppercase tracking-widest text-zinc-600 bg-zinc-800/50 px-2 py-0.5 rounded">{tag}</span>
+                  <span class="text-[10px] uppercase tracking-widest text-muted-foreground bg-muted px-2 py-0.5 rounded">{tag}</span>
                 ))}
               </div>
             </article>
@@ -39,7 +39,7 @@ const posts = (await getCollection("blog"))
       </div>
 
       {posts.length === 0 && (
-        <p class="text-zinc-600 text-sm">No posts yet. Check back soon.</p>
+        <p class="text-muted-foreground text-sm">No posts yet. Check back soon.</p>
       )}
     </main>
   </div>

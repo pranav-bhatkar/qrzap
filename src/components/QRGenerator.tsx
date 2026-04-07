@@ -217,7 +217,7 @@ function Field({
           onChange={(e) => onChange(name, e.target.value)}
           placeholder={placeholder}
           rows={3}
-          className="bg-muted/30 border-border/20 text-sm"
+          className="bg-muted/50 border-border text-sm"
         />
       ) : (
         <Input
@@ -226,7 +226,7 @@ function Field({
           value={value}
           onChange={(e) => onChange(name, e.target.value)}
           placeholder={placeholder}
-          className="bg-muted/30 border-border/20 text-sm"
+          className="bg-muted/50 border-border text-sm"
         />
       )}
     </div>
@@ -298,7 +298,7 @@ function PasswordField({
           value={value}
           onChange={(e) => onChange(name, e.target.value)}
           placeholder={placeholder}
-          className="bg-muted/30 border-border/20 text-sm pr-10"
+          className="bg-muted/50 border-border text-sm pr-10"
         />
         <button
           type="button"
@@ -437,7 +437,7 @@ function TypeFields({
               value={fields.encryption || "WPA"}
               onValueChange={(v) => onChange("encryption", v)}
             >
-              <SelectTrigger className="bg-muted/30 border-border/20 text-sm">
+              <SelectTrigger className="bg-muted/50 border-border text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -585,8 +585,8 @@ export default function QRGenerator() {
   const [activeType, setActiveType] = useState<QRType>("url");
   const [fields, setFields] = useState<Record<string, string>>({ url: "" });
   const [options, setOptions] = useState<QROptions>({
-    fgColor: "#ffffff",
-    bgColor: "#09090b",
+    fgColor: "#000000",
+    bgColor: "#ffffff",
     size: 300,
     errorCorrection: "M",
   });
@@ -760,12 +760,12 @@ export default function QRGenerator() {
             </div>
 
             {/* Form fields */}
-            <div className="rounded-xl border border-border/20 bg-card/50 p-4 md:p-6">
+            <div className="rounded-xl border border-border bg-card p-4 md:p-6">
               <TypeFields type={activeType} fields={fields} onChange={set} />
             </div>
 
             {/* Customize accordion */}
-            <div className="rounded-lg border border-border/20 bg-card/50">
+            <div className="rounded-lg border border-border bg-card">
               <button
                 onClick={() => {
                   if (!showCustomize) {
@@ -899,7 +899,7 @@ export default function QRGenerator() {
 
           {/* ===== RIGHT: QR preview ===== */}
           <div className="md:sticky md:top-20 md:self-start flex flex-col items-center gap-3">
-            <div className="w-[200px] h-[200px] md:w-[340px] md:h-[340px] rounded-lg bg-muted/20 border border-border/20 flex items-center justify-center p-3">
+            <div className="w-[200px] h-[200px] md:w-[340px] md:h-[340px] rounded-lg bg-muted/30 border border-border flex items-center justify-center p-3">
               {qrDataUrl ? (
                 <img
                   src={qrDataUrl}
