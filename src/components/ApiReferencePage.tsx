@@ -42,19 +42,6 @@ const TOC = [
 export default function ApiReferencePage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/40">
-        <div className="flex items-center justify-between px-5 py-3 max-w-6xl mx-auto">
-          <a href="/" className="flex items-center gap-2">
-            <QrIcon className="w-4 h-4" />
-            <span className="text-sm font-semibold tracking-tight">QRzap</span>
-          </a>
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <a href="/" className="hover:text-foreground transition-colors">Generator</a>
-            <a href="/docs" className="hover:text-foreground transition-colors">Docs</a>
-            <a href="/support" className="hover:text-foreground transition-colors">Support</a>
-          </div>
-        </div>
-      </nav>
 
       <main className="flex-grow px-4 md:px-8 py-10 max-w-6xl mx-auto w-full">
         <div className="grid md:grid-cols-[180px_1fr] gap-10">

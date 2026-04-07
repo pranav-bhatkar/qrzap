@@ -24,22 +24,6 @@ const formattedDate = post.data.date.toLocaleDateString("en-US", {
 
 <Layout title={`${post.data.title} - QRzap`} description={post.data.description}>
   <div class="bg-background">
-    <!-- Nav -->
-    <nav class="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/40">
-      <div class="flex items-center justify-between px-4 md:px-8 py-3 max-w-6xl mx-auto">
-        <a href="/" class="flex items-center gap-2">
-          <QrIcon className="w-4 h-4" />
-          <span class="text-sm font-semibold tracking-tight">QRzap</span>
-        </a>
-        <div class="flex items-center gap-3 text-xs text-zinc-500">
-          <a href="/docs" class="hover:text-white transition-colors">API</a>
-          <a href="/blogs" class="hover:text-white transition-colors">Blog</a>
-          <a href="/support" class="hover:text-white transition-colors flex items-center gap-1">
-            <HeartIcon className="w-3 h-3" />Support
-          </a>
-        </div>
-      </div>
-    </nav>
 
     <article class="px-4 md:px-8 lg:px-12 py-10 max-w-3xl mx-auto">
       <header class="mb-10">

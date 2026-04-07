@@ -561,6 +561,12 @@ function NavBar() {
             API
           </a>
           <a
+            href="/blogs"
+            className="rounded px-3 py-2 hover:bg-secondary hover:brightness-125 transition-all duration-300"
+          >
+            Blog
+          </a>
+          <a
             href="/support"
             className="rounded px-3 py-2 hover:bg-secondary hover:brightness-125 transition-all duration-300 flex items-center gap-1"
           >

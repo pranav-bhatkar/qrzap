@@ -1,15 +1,18 @@
 ---
 import "../styles/global.css";
 import PostHog from "../components/posthog.astro";
+import Header from "../components/Header.astro";
 
 interface Props {
   title: string;
   description?: string;
+  hideHeader?: boolean;
 }
 
 const {
   title,
   description = "Free QR code generator with web UI, REST API, and MCP server. Supports URL, WiFi, phone, email, SMS, vCard.",
+  hideHeader = false,
 } = Astro.props;
 const canonicalURL = new URL(
   Astro.url.pathname,
@@ -99,6 +102,8 @@ const canonicalURL = new URL(
       >
       </div>
     </div>
+
+    {!hideHeader && <Header />}
 
     <div class="flex-grow">
       <slot />
