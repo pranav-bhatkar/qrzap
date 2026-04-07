@@ -218,6 +218,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           data: base64,
           mimeType: "image/png",
         },
+        {
+          type: "text",
+          text: `[QR Code generated as PNG (${size}x${size}px)]\n\nTo save this as a file, write the following base64 data to a .png file:\n\n${base64}`,
+        },
       ],
     };
   } catch (err) {
