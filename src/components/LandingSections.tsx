@@ -140,6 +140,33 @@ function MCPSection() {
   );
 }
 
+// === CLI Section ===
+function CLISection() {
+  return (
+    <Section id="cli">
+      <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="order-2 md:order-1 space-y-3">
+          <Terminal command="npx qrzap i" title="Interactive mode" />
+          <Terminal command="npx qrzap g --type wifi --ssid Office --password guest --format png" title="Direct generate" />
+          <Terminal command="npx qrzap help" title="Help" />
+        </div>
+        <div className="order-1 md:order-2">
+          <SectionLabel>CLI Tool</SectionLabel>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">Generate from terminal</h2>
+          <p className="text-sm text-muted-foreground mb-4 leading-relaxed max-w-md">
+            Interactive prompts, direct generation with flags, or start the MCP server. One package, three modes.
+          </p>
+          <div className="space-y-2 text-xs text-muted-foreground/60">
+            <p><code className="bg-muted/30 px-1.5 py-0.5 rounded font-mono text-[11px] text-muted-foreground">npx qrzap i</code> Interactive mode with guided prompts</p>
+            <p><code className="bg-muted/30 px-1.5 py-0.5 rounded font-mono text-[11px] text-muted-foreground">npx qrzap g</code> Direct generation with flags</p>
+            <p><code className="bg-muted/30 px-1.5 py-0.5 rounded font-mono text-[11px] text-muted-foreground">npx qrzap</code> Start MCP server (default)</p>
+          </div>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
 // === API Playground ===
 function APIPlayground() {
   const [type, setType] = useState("url");
@@ -326,6 +353,8 @@ export default function LandingSections() {
     <>
       <div className="max-w-6xl mx-auto"><div className="border-t border-zinc-800/40" /></div>
       <MCPSection />
+      <div className="max-w-6xl mx-auto"><div className="border-t border-zinc-800/40" /></div>
+      <CLISection />
       <div className="max-w-6xl mx-auto"><div className="border-t border-zinc-800/40" /></div>
       <APIPlayground />
       <div className="max-w-6xl mx-auto"><div className="border-t border-zinc-800/40" /></div>
