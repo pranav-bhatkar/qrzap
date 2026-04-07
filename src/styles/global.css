@@ -146,8 +146,8 @@
 .stripe-pattern {
   background: repeating-linear-gradient(
     315deg,
-    rgb(39, 39, 42) 0,
-    rgb(39, 39, 42) 1px,
+    var(--stripe-color, rgb(39, 39, 42)) 0,
+    var(--stripe-color, rgb(39, 39, 42)) 1px,
     transparent 0,
     transparent 50%
   );
@@ -155,10 +155,13 @@
   background-attachment: fixed;
 }
 
+:root { --stripe-color: rgb(220, 220, 225); }
+.dark { --stripe-color: rgb(39, 39, 42); }
+
 .stripe-divider {
   height: 4px;
-  border-top: 1px solid rgb(39, 39, 42);
-  border-bottom: 1px solid rgb(39, 39, 42);
+  border-top: 1px solid var(--stripe-color);
+  border-bottom: 1px solid var(--stripe-color);
 }
 
 .stripe-border-x {

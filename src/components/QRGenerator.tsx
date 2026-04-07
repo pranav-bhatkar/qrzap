@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import QRCode from "qrcode";
+import ThemeToggle from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -532,8 +533,8 @@ function NavBar() {
         }}
         className={`mx-auto flex items-center justify-between px-8 lg:px-12 py-3 ${
           scrolled
-            ? "rounded-lg bg-zinc-900/95 backdrop-blur-sm border border-zinc-800/50 shadow-lg shadow-black/20"
-            : "bg-transparent border border-transparent border-b-zinc-800"
+            ? "rounded-lg bg-background/95 backdrop-blur-sm border border-border shadow-lg shadow-black/10 dark:shadow-black/20"
+            : "bg-transparent border border-transparent border-b-border"
         }`}
       >
         <a
@@ -573,6 +574,7 @@ function NavBar() {
             <HeartIcon className="w-3 h-3" />
             Support
           </a>
+          <ThemeToggle />
         </div>
       </nav>
     </div>

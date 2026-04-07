@@ -21,9 +21,17 @@ const canonicalURL = new URL(
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- Prevent flash: apply theme before paint -->
+    <script is:inline>
+      (function() {
+        var t = localStorage.getItem('theme');
+        if (t === 'light') { document.documentElement.classList.remove('dark'); }
+        else { document.documentElement.classList.add('dark'); }
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -92,12 +100,12 @@ const canonicalURL = new URL(
   <body class="min-h-screen antialiased flex flex-col">
     <div class="hidden lg:flex max-w-6xl mx-auto relative">
       <div
-        class="fixed top-0 bottom-0 w-4 stripe-pattern border-x border-zinc-800/40 z-40"
+        class="fixed top-0 bottom-0 w-4 stripe-pattern border-x border-border/40 z-40"
         style="left: calc((100vw - 72rem) / 2 - 1rem);"
       >
       </div>
       <div
-        class="fixed top-0 bottom-0 w-4 stripe-pattern border-x border-zinc-800/40 z-40"
+        class="fixed top-0 bottom-0 w-4 stripe-pattern border-x border-border/40 z-40"
         style="right: calc((100vw - 72rem) / 2 - 1rem);"
       >
       </div>
@@ -126,7 +134,7 @@ const canonicalURL = new URL(
           </div>
         </a>
         <div
-          class="flex items-center gap-4 text-[9px] uppercase tracking-[0.2em] text-zinc-600"
+          class="flex items-center gap-4 text-[9px] uppercase tracking-[0.2em] text-muted-foreground/60"
         >
           <span>QRzap</span>
           <span>&middot;</span>
@@ -137,7 +145,7 @@ const canonicalURL = new URL(
       </div>
       <div class="max-w-6xl mx-auto">
         <div
-          class="relative w-full h-4 border-y border-y-zinc-800 bg-[repeating-linear-gradient(315deg,rgb(39,39,42)_0,rgb(39,39,42)_1px,transparent_0,transparent_50%)] bg-[length:10px_10px] bg-fixed md:h-6"
+          class="relative w-full h-4 border-y border-border stripe-pattern md:h-6"
         >
         </div>
       </div>
