@@ -1,6 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { HeartIcon, QrIcon } from "./icons";
+import { HeartIcon, QrIcon, LinkIcon } from "./icons";
 
 function CoffeeIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
@@ -26,84 +24,128 @@ function ArrowRightIcon({ className = "w-4 h-4" }: { className?: string }) {
   );
 }
 
+function StarIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+    </svg>
+  );
+}
+
 export default function SupportPage() {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border">
-        <div className="mx-auto max-w-5xl px-4 py-3 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-              <QrIcon className="w-4 h-4 text-primary" />
-            </div>
-            <span className="text-lg font-semibold tracking-tight">QRzap</span>
-          </a>
-          <a href="/">
-            <Button variant="ghost" size="sm" className="text-xs">
-              Back to Generator
-            </Button>
-          </a>
-        </div>
-      </header>
-
-      {/* Main */}
-      <main className="mx-auto max-w-2xl px-4 py-16">
+    <div className="bg-background">
+      <main className="mx-auto max-w-6xl px-4 md:px-8 lg:px-12 py-10">
+        {/* Header */}
         <div className="text-center mb-12">
-          <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-6">
-            <HeartIcon className="w-7 h-7 text-primary" />
-          </div>
-          <h2 className="text-2xl font-semibold mb-3">
-            Support QRzap
-          </h2>
-          <p className="text-muted-foreground text-sm leading-relaxed max-w-md mx-auto">
-            QRzap is free and always will be. If you find it useful, consider
-            supporting the project to help keep it running and improving.
+          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 font-medium mb-3">Support</p>
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">Keep QRzap free</h1>
+          <p className="text-sm text-muted-foreground max-w-md mx-auto">
+            No ads. No tracking. No subscriptions. If you find it useful, here's how you can help.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-4">
-          <a href="https://buymeacoffee.com/pranavbhatkar" target="_blank" rel="noopener noreferrer" className="group" onClick={() => window.posthog?.capture("support_link_clicked", { platform: "buymeacoffee" })}>
-            <Card className="h-full transition-colors hover:border-amber-500/30 hover:bg-amber-500/5">
-              <CardContent className="p-6">
-                <div className="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-4">
-                  <CoffeeIcon className="w-5 h-5 text-amber-400" />
-                </div>
-                <h3 className="text-sm font-semibold mb-1.5">Buy Me a Coffee</h3>
-                <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
-                  Support with a one-time or recurring contribution via Buy Me a Coffee.
-                </p>
-                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-400 group-hover:gap-2.5 transition-all">
-                  Contribute <ArrowRightIcon className="w-3.5 h-3.5" />
-                </span>
-              </CardContent>
-            </Card>
+        {/* Bento grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          {/* Buy Me a Coffee - spans 2 cols */}
+          <a
+            href="https://buymeacoffee.com/pranavbhatkar"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group md:col-span-2 rounded-xl border border-border/20 bg-card/50 p-8 hover:border-amber-500/30 hover:bg-amber-500/5 transition-all"
+            onClick={() => window.posthog?.capture("support_link_clicked", { platform: "buymeacoffee" })}
+          >
+            <div className="flex items-start justify-between mb-6">
+              <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+                <CoffeeIcon className="w-6 h-6 text-amber-400" />
+              </div>
+              <ArrowRightIcon className="w-5 h-5 text-muted-foreground/30 group-hover:text-amber-400 group-hover:translate-x-1 transition-all" />
+            </div>
+            <h2 className="text-lg font-semibold mb-2">Buy Me a Coffee</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
+              One-time or recurring. Every coffee keeps the servers running and the code open source.
+            </p>
           </a>
 
-          <a href="https://razorpay.me/@pranavbhatkar" target="_blank" rel="noopener noreferrer" className="group" onClick={() => window.posthog?.capture("support_link_clicked", { platform: "razorpay" })}>
-            <Card className="h-full transition-colors hover:border-primary/30 hover:bg-primary/5">
-              <CardContent className="p-6">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center mb-4">
-                  <CreditCardIcon className="w-5 h-5 text-primary" />
-                </div>
-                <h3 className="text-sm font-semibold mb-1.5">Razorpay</h3>
-                <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
-                  Support via Razorpay with UPI, cards, net banking, and more payment options.
-                </p>
-                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-primary group-hover:gap-2.5 transition-all">
-                  Contribute <ArrowRightIcon className="w-3.5 h-3.5" />
-                </span>
-              </CardContent>
-            </Card>
+          {/* Razorpay */}
+          <a
+            href="https://razorpay.me/@pranavbhatkar"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group rounded-xl border border-border/20 bg-card/50 p-8 hover:border-sky-500/30 hover:bg-sky-500/5 transition-all"
+            onClick={() => window.posthog?.capture("support_link_clicked", { platform: "razorpay" })}
+          >
+            <div className="flex items-start justify-between mb-6">
+              <div className="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center">
+                <CreditCardIcon className="w-6 h-6 text-sky-400" />
+              </div>
+              <ArrowRightIcon className="w-5 h-5 text-muted-foreground/30 group-hover:text-sky-400 group-hover:translate-x-1 transition-all" />
+            </div>
+            <h2 className="text-lg font-semibold mb-2">Razorpay</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              UPI, cards, net banking. For supporters in India.
+            </p>
+          </a>
+
+          {/* Star on GitHub */}
+          <a
+            href="https://github.com/pranav-bhatkar/qrzap"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group rounded-xl border border-border/20 bg-card/50 p-8 hover:border-zinc-500/30 hover:bg-zinc-500/5 transition-all"
+            onClick={() => window.posthog?.capture("github_link_clicked")}
+          >
+            <div className="flex items-start justify-between mb-6">
+              <div className="w-12 h-12 rounded-xl bg-zinc-500/10 border border-zinc-500/20 flex items-center justify-center">
+                <StarIcon className="w-6 h-6 text-zinc-400" />
+              </div>
+              <ArrowRightIcon className="w-5 h-5 text-muted-foreground/30 group-hover:text-zinc-300 group-hover:translate-x-1 transition-all" />
+            </div>
+            <h2 className="text-lg font-semibold mb-2">Star on GitHub</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Free and takes 2 seconds. Helps others find QRzap.
+            </p>
+          </a>
+
+          {/* Share - spans 2 cols */}
+          <a
+            href="https://twitter.com/intent/tweet?text=Found%20this%20free%20QR%20code%20generator%20with%20an%20API%20and%20MCP%20server%20%E2%80%94%20https%3A%2F%2Fqrzap.fun"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group md:col-span-2 rounded-xl border border-border/20 bg-card/50 p-8 hover:border-zinc-500/30 hover:bg-zinc-500/5 transition-all"
+          >
+            <div className="flex items-start justify-between mb-6">
+              <div className="w-12 h-12 rounded-xl bg-zinc-500/10 border border-zinc-500/20 flex items-center justify-center">
+                <LinkIcon className="w-6 h-6 text-zinc-400" />
+              </div>
+              <ArrowRightIcon className="w-5 h-5 text-muted-foreground/30 group-hover:text-zinc-300 group-hover:translate-x-1 transition-all" />
+            </div>
+            <h2 className="text-lg font-semibold mb-2">Share it</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
+              Tell someone about QRzap. Tweet it, post it, send it in a group chat. Word of mouth is the best marketing.
+            </p>
           </a>
         </div>
 
-        <div className="mt-12 text-center">
-          <p className="text-xs text-muted-foreground/60">
-            Thank you for using QRzap. Every contribution helps.
-          </p>
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {[
+            { label: "Price", value: "Free" },
+            { label: "QR Types", value: "7" },
+            { label: "API Key", value: "None" },
+            { label: "Tracking", value: "Zero" },
+          ].map((s) => (
+            <div key={s.label} className="rounded-xl border border-border/20 bg-card/50 p-5 text-center">
+              <p className="text-xl font-bold mb-1">{s.value}</p>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50">{s.label}</p>
+            </div>
+          ))}
         </div>
+
+        <p className="text-center text-xs text-muted-foreground/40 mt-8">
+          built by <a href="https://pranavbhatkar.me" className="underline underline-offset-2 hover:text-muted-foreground transition-colors">pranav bhatkar</a>. open source. no strings attached.
+        </p>
       </main>
-
     </div>
   );
 }

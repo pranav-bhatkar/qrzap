@@ -2,18 +2,49 @@
 import { QrIcon, HeartIcon } from "./icons";
 ---
 
-<nav class="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/40">
-  <div class="flex items-center justify-between px-4 md:px-8 py-3 max-w-6xl mx-auto">
+<div class="fixed inset-x-0 top-0 z-50 max-w-6xl w-full mx-auto lg:px-0" id="header-wrapper">
+  <nav id="header-nav" class="mx-auto flex items-center justify-between px-8 lg:px-12 py-3 bg-transparent border border-transparent border-b-zinc-800" style="width:100%;transform:translateY(0);transition:width 0.4s cubic-bezier(0.32,0.72,0,1),transform 0.4s cubic-bezier(0.32,0.72,0,1),background 0.4s ease,border-color 0.4s ease,box-shadow 0.4s ease;">
     <a href="/" class="flex items-center gap-2">
       <QrIcon className="w-4 h-4" />
       <span class="text-sm font-semibold tracking-tight">QRzap</span>
     </a>
-    <div class="flex items-center gap-3 text-xs text-zinc-500">
+    <div class="flex items-center gap-4 text-xs text-zinc-500">
       <a href="/docs" class="rounded px-3 py-2 hover:text-white transition-colors">API</a>
       <a href="/blogs" class="rounded px-3 py-2 hover:text-white transition-colors">Blog</a>
       <a href="/support" class="rounded px-3 py-2 hover:text-white transition-colors flex items-center gap-1">
         <HeartIcon className="w-3 h-3" />Support
       </a>
     </div>
-  </div>
-</nav>
+  </nav>
+</div>
+<div class="h-14"></div>
+
+<script is:inline>
+  (function() {
+    var nav = document.getElementById('header-nav');
+    if (!nav) return;
+    var scrolled = false;
+    function onScroll() {
+      var s = window.scrollY > 10;
+      if (s === scrolled) return;
+      scrolled = s;
+      if (s) {
+        nav.style.width = '90%';
+        nav.style.transform = 'translateY(10px)';
+        nav.style.background = 'rgba(24,24,27,0.95)';
+        nav.style.borderColor = 'rgba(63,63,70,0.5)';
+        nav.style.borderRadius = '0.5rem';
+        nav.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+      } else {
+        nav.style.width = '100%';
+        nav.style.transform = 'translateY(0)';
+        nav.style.background = 'transparent';
+        nav.style.borderColor = 'transparent';
+        nav.style.borderBottomColor = 'rgb(39,39,42)';
+        nav.style.borderRadius = '0';
+        nav.style.boxShadow = 'none';
+      }
+    }
+    window.addEventListener('scroll', onScroll);
+  })();
+</script>
