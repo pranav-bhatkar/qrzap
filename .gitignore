@@ -29,5 +29,5 @@ pnpm-debug.log*
 
 # private skills (not for public repo)
 .claude/skills/blog-writer/
-.claude/skills/Humanizer/
+.claude/skills/humanizer/
 .claude/skills/integration-astro-hybrid/
