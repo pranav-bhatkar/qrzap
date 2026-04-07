@@ -62,7 +62,7 @@ export default function SupportPage() {
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4">
-          <a href="https://buymeacoffee.com/pranavbhatkar" target="_blank" rel="noopener noreferrer" className="group">
+          <a href="https://buymeacoffee.com/pranavbhatkar" target="_blank" rel="noopener noreferrer" className="group" onClick={() => window.posthog?.capture("support_link_clicked", { platform: "buymeacoffee" })}>
             <Card className="h-full transition-colors hover:border-amber-500/30 hover:bg-amber-500/5">
               <CardContent className="p-6">
                 <div className="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-4">
@@ -79,7 +79,7 @@ export default function SupportPage() {
             </Card>
           </a>
 
-          <a href="https://razorpay.me/@pranavbhatkar" target="_blank" rel="noopener noreferrer" className="group">
+          <a href="https://razorpay.me/@pranavbhatkar" target="_blank" rel="noopener noreferrer" className="group" onClick={() => window.posthog?.capture("support_link_clicked", { platform: "razorpay" })}>
             <Card className="h-full transition-colors hover:border-primary/30 hover:bg-primary/5">
               <CardContent className="p-6">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center mb-4">

@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import PostHog from "../components/posthog.astro";
 
 interface Props {
   title: string;
@@ -69,6 +70,9 @@ const canonicalURL = new URL(
         },
       })}
     />
+
+    <!-- PostHog Analytics -->
+    <PostHog />
 
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-CT9SKT4PML"

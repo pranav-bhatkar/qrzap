@@ -6,10 +6,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { QrIcon, ClipboardIcon, CheckIcon, LinkIcon, WifiIcon, PhoneIcon, EmailIcon, HeartIcon } from "./icons";
 
 // --- Copy button ---
-function CopyBtn({ text, className = "" }: { text: string; className?: string }) {
+function CopyBtn({ text, className = "", onCopy }: { text: string; className?: string; onCopy?: () => void }) {
   const [ok, setOk] = useState(false);
   return (
-    <button onClick={() => { navigator.clipboard.writeText(text); setOk(true); setTimeout(() => setOk(false), 2000); }}
+    <button onClick={() => { navigator.clipboard.writeText(text); setOk(true); setTimeout(() => setOk(false), 2000); onCopy?.(); }}
       className={`flex items-center gap-1 text-[10px] uppercase tracking-widest transition-colors ${ok ? "text-emerald-400" : "text-muted-foreground/60 hover:text-muted-foreground"} ${className}`}>
       {ok ? <CheckIcon className="w-3 h-3" /> : <ClipboardIcon className="w-3 h-3" />}
       {ok ? "Copied" : "Copy"}
@@ -110,7 +110,7 @@ function MCPSection() {
           </p>
           <div className="flex gap-1 mb-4">
             {tabs.map((t) => (
-              <button key={t.id} onClick={() => setActive(t)}
+              <button key={t.id} onClick={() => { setActive(t); window.posthog?.capture("mcp_setup_tab_selected", { tab: t.id }); }}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${active.id === t.id ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}>
                 {t.label}
               </button>
@@ -129,7 +129,7 @@ function MCPSection() {
                 <span className="text-[10px] text-muted-foreground/40">
                   {active.id === "cursor" ? ".cursor/mcp.json" : "claude_desktop_config.json"}
                 </span>
-                <CopyBtn text={active.cmd} />
+                <CopyBtn text={active.cmd} onCopy={() => window.posthog?.capture("mcp_command_copied", { tab: active.id })} />
               </div>
               <pre className="p-4 text-xs font-mono text-sky-400 overflow-x-auto">{active.cmd}</pre>
             </div>
@@ -204,7 +204,7 @@ function APIPlayground() {
               { id: "phone", label: "Phone", Icon: PhoneIcon },
               { id: "email", label: "Email", Icon: EmailIcon },
             ].map((t) => (
-              <button key={t.id} onClick={() => { setType(t.id); setParams({}); }}
+              <button key={t.id} onClick={() => { setType(t.id); setParams({}); window.posthog?.capture("api_playground_type_changed", { qr_type: t.id }); }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-all ${type === t.id ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}>
                 <t.Icon className="w-3 h-3" />{t.label}
               </button>
@@ -248,7 +248,7 @@ function APIPlayground() {
           <div className="rounded-xl border border-border/20 bg-zinc-950 overflow-hidden">
             <div className="flex items-center justify-between px-4 py-2 border-b border-border/10">
               <span className="text-[10px] text-muted-foreground/40">Generated URL</span>
-              <CopyBtn text={apiUrl} />
+              <CopyBtn text={apiUrl} onCopy={() => window.posthog?.capture("api_url_copied", { qr_type: type })} />
             </div>
             <div className="p-4 overflow-x-auto">
               <code className="text-[11px] font-mono text-sky-400 break-all whitespace-pre-wrap">{apiUrl}</code>
@@ -323,7 +323,7 @@ function OpenSourceCTA() {
           QRzap is open source and free forever. Star the repo, fork it, self-host it, or contribute.
         </p>
         <div className="flex items-center justify-center gap-3">
-          <a href="https://github.com/pranav-bhatkar/qrzap" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/pranav-bhatkar/qrzap" target="_blank" rel="noopener noreferrer" onClick={() => window.posthog?.capture("github_link_clicked")}>
             <Button variant="outline" className="gap-2 text-xs">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" /></svg>
               GitHub

@@ -593,6 +593,12 @@ export default function QRGenerator() {
   const set = useCallback((n: string, v: string) => {
     setFields((p) => ({ ...p, [n]: v }));
   }, []);
+
+  const handleTypeChange = useCallback((type: QRType) => {
+    setActiveType(type);
+    window.posthog?.capture("qr_type_selected", { qr_type: type });
+  }, []);
+
   const qrData = buildQRData(activeType, fields);
 
   useEffect(() => {
@@ -615,6 +621,11 @@ export default function QRGenerator() {
         ]);
         setQrDataUrl(d);
         setSvgString(s);
+        window.posthog?.capture("qr_generated", {
+          qr_type: activeType,
+          error_correction: options.errorCorrection,
+          size: options.size,
+        });
       } catch {
         setQrDataUrl("");
         setSvgString("");
@@ -626,6 +637,7 @@ export default function QRGenerator() {
   const dl = useCallback(
     (fmt: "png" | "svg" | "jpeg" | "webp") => {
       if (!qrData) return;
+      window.posthog?.capture("qr_downloaded", { format: fmt, qr_type: activeType });
       if (fmt === "svg") {
         const u = URL.createObjectURL(
           new Blob([svgString], { type: "image/svg+xml" }),
@@ -655,7 +667,7 @@ export default function QRGenerator() {
       };
       img.src = qrDataUrl;
     },
-    [qrData, qrDataUrl, svgString, options.size],
+    [qrData, qrDataUrl, svgString, options.size, activeType],
   );
 
   const share = useCallback(async () => {
@@ -666,8 +678,9 @@ export default function QRGenerator() {
       if (navigator.canShare?.({ files: [f] }))
         await navigator.share({ title: "QR Code", files: [f] });
       else await navigator.share({ title: "QR Code", url: location.href });
+      window.posthog?.capture("qr_shared", { qr_type: activeType });
     } catch {}
-  }, [qrDataUrl]);
+  }, [qrDataUrl, activeType]);
 
   return (
     <div className="bg-background">
@@ -694,7 +707,7 @@ export default function QRGenerator() {
             <div className="md:hidden">
               <Select
                 value={activeType}
-                onValueChange={(v) => setActiveType(v as QRType)}
+                onValueChange={(v) => handleTypeChange(v as QRType)}
               >
                 <SelectTrigger className="border-0 text-sm w-full font-medium rounded-full h-10 px-4 shadow-md">
                   <div className="flex items-center gap-2.5">
@@ -725,7 +738,7 @@ export default function QRGenerator() {
               {QR_TYPES.map((t) => (
                 <button
                   key={t.id}
-                  onClick={() => setActiveType(t.id)}
+                  onClick={() => handleTypeChange(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                     activeType === t.id
                       ? "bg-foreground text-background"
@@ -746,7 +759,12 @@ export default function QRGenerator() {
             {/* Customize accordion */}
             <div className="rounded-lg border border-border/20 bg-card/50">
               <button
-                onClick={() => setShowCustomize(!showCustomize)}
+                onClick={() => {
+                  if (!showCustomize) {
+                    window.posthog?.capture("appearance_panel_opened", { qr_type: activeType });
+                  }
+                  setShowCustomize(!showCustomize);
+                }}
                 className="flex items-center justify-between w-full px-5 py-3 text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
                 <span className="flex items-center gap-2">
