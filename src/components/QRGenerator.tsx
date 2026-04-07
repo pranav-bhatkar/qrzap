@@ -108,6 +108,30 @@ function Field({ label, name, value, onChange, type = "text", placeholder, texta
   );
 }
 
+function EyeIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>);
+}
+function EyeOffIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12c1.292 4.338 5.31 7.5 10.066 7.5.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" /></svg>);
+}
+
+function PasswordField({ label, name, value, onChange, placeholder }: {
+  label: string; name: string; value: string; onChange: (n: string, v: string) => void; placeholder?: string;
+}) {
+  const [show, setShow] = useState(false);
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</Label>
+      <div className="relative">
+        <Input type={show ? "text" : "password"} value={value} onChange={(e) => onChange(name, e.target.value)} placeholder={placeholder} className="bg-muted/30 border-border/20 text-sm pr-10" />
+        <button type="button" onClick={() => setShow((s) => !s)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-muted-foreground transition-colors">
+          {show ? <EyeOffIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function TypeFields({ type, fields, onChange }: { type: QRType; fields: Record<string, string>; onChange: (n: string, v: string) => void }) {
   switch (type) {
     case "url": return <Field label="URL" name="url" value={fields.url || ""} onChange={onChange} placeholder="https://example.com" showPaste />;
@@ -115,7 +139,7 @@ function TypeFields({ type, fields, onChange }: { type: QRType; fields: Record<s
     case "phone": return <Field label="Phone" name="phone" value={fields.phone || ""} onChange={onChange} type="tel" placeholder="+1 234 567 8900" showPaste />;
     case "email": return (<div className="space-y-3"><Field label="Email" name="emailAddress" value={fields.emailAddress || ""} onChange={onChange} type="email" placeholder="hello@example.com" showPaste /><Field label="Subject" name="subject" value={fields.subject || ""} onChange={onChange} placeholder="Optional" /><Field label="Body" name="body" value={fields.body || ""} onChange={onChange} placeholder="Optional" textarea /></div>);
     case "sms": return (<div className="space-y-3"><Field label="Phone" name="smsPhone" value={fields.smsPhone || ""} onChange={onChange} type="tel" placeholder="+1 234 567 8900" showPaste /><Field label="Message" name="smsBody" value={fields.smsBody || ""} onChange={onChange} placeholder="Optional" textarea /></div>);
-    case "wifi": return (<div className="space-y-3"><Field label="SSID" name="ssid" value={fields.ssid || ""} onChange={onChange} placeholder="Network name" /><Field label="Password" name="wifiPassword" value={fields.wifiPassword || ""} onChange={onChange} type="password" placeholder="Password" /><div className="space-y-1.5"><Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Encryption</Label><Select value={fields.encryption || "WPA"} onValueChange={(v) => onChange("encryption", v)}><SelectTrigger className="bg-muted/30 border-border/20 text-sm"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="WPA">WPA/WPA2</SelectItem><SelectItem value="WEP">WEP</SelectItem><SelectItem value="nopass">None</SelectItem></SelectContent></Select></div><label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer"><input type="checkbox" checked={fields.hidden === "true"} onChange={(e) => onChange("hidden", String(e.target.checked))} className="rounded" />Hidden</label></div>);
+    case "wifi": return (<div className="space-y-3"><Field label="SSID" name="ssid" value={fields.ssid || ""} onChange={onChange} placeholder="Network name" /><PasswordField label="Password" name="wifiPassword" value={fields.wifiPassword || ""} onChange={onChange} placeholder="Password" /><div className="space-y-1.5"><Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Encryption</Label><Select value={fields.encryption || "WPA"} onValueChange={(v) => onChange("encryption", v)}><SelectTrigger className="bg-muted/30 border-border/20 text-sm"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="WPA">WPA/WPA2</SelectItem><SelectItem value="WEP">WEP</SelectItem><SelectItem value="nopass">None</SelectItem></SelectContent></Select></div><label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer"><input type="checkbox" checked={fields.hidden === "true"} onChange={(e) => onChange("hidden", String(e.target.checked))} className="rounded" />Hidden</label></div>);
     case "vcard": return (<div className="space-y-3"><ContactPickerButton onChange={onChange} /><div className="grid grid-cols-2 gap-2"><Field label="First" name="firstName" value={fields.firstName || ""} onChange={onChange} placeholder="John" /><Field label="Last" name="lastName" value={fields.lastName || ""} onChange={onChange} placeholder="Doe" /></div><Field label="Phone" name="vcardPhone" value={fields.vcardPhone || ""} onChange={onChange} type="tel" placeholder="+1 234 567 8900" /><Field label="Email" name="vcardEmail" value={fields.vcardEmail || ""} onChange={onChange} type="email" placeholder="john@example.com" /><Field label="Org" name="org" value={fields.org || ""} onChange={onChange} placeholder="Acme Inc." /><Field label="Website" name="vcardUrl" value={fields.vcardUrl || ""} onChange={onChange} placeholder="https://example.com" /></div>);
   }
 }
@@ -207,7 +231,7 @@ export default function QRGenerator() {
       <div className="h-20" />
 
       {/* Main: two-column, always side by side on md+ */}
-      <main className="px-8 lg:px-12 py-6 max-w-6xl mx-auto w-full">
+      <main className="px-4 md:px-8 lg:px-12 py-6 max-w-6xl mx-auto w-full">
         {/* Hero */}
         <div className="text-center pt-6 pb-10">
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">Create QR Code</h1>
@@ -231,7 +255,7 @@ export default function QRGenerator() {
             </div>
 
             {/* Form fields */}
-            <div className="rounded-xl border border-border/20 bg-card/50 p-6">
+            <div className="rounded-xl border border-border/20 bg-card/50 p-4 md:p-6">
               <TypeFields type={activeType} fields={fields} onChange={set} />
             </div>
 
@@ -246,10 +270,10 @@ export default function QRGenerator() {
                 <div className="px-5 pb-5 space-y-4">
                   <Separator className="opacity-20" />
                   {/* Colors */}
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Foreground</Label>
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 flex-wrap">
                         {PRESET_COLORS.slice(0, 4).map((c) => (
                           <button key={`f${c}`} onClick={() => setOptions((p) => ({ ...p, fgColor: c }))}
                             className={`w-5 h-5 rounded-full ring-1 ring-offset-1 ring-offset-background ${options.fgColor === c ? "ring-foreground/50" : "ring-transparent"}`} style={{ backgroundColor: c }} />
@@ -259,7 +283,7 @@ export default function QRGenerator() {
                     </div>
                     <div className="space-y-2">
                       <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Background</Label>
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 flex-wrap">
                         {PRESET_COLORS.slice(0, 4).map((c) => (
                           <button key={`b${c}`} onClick={() => setOptions((p) => ({ ...p, bgColor: c }))}
                             className={`w-5 h-5 rounded-full ring-1 ring-offset-1 ring-offset-background ${options.bgColor === c ? "ring-foreground/50" : "ring-transparent"}`} style={{ backgroundColor: c }} />
@@ -269,7 +293,7 @@ export default function QRGenerator() {
                     </div>
                   </div>
                   {/* Size + EC */}
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <div className="flex justify-between"><Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Size</Label><span className="text-[10px] font-mono text-muted-foreground">{options.size}</span></div>
                       <Slider value={[options.size]} onValueChange={(v: number | number[]) => setOptions((p) => ({ ...p, size: Array.isArray(v) ? v[0] : v }))} min={128} max={512} step={8} />
@@ -291,10 +315,9 @@ export default function QRGenerator() {
             </div>
           </div>
 
-          {/* ===== RIGHT: QR preview, fixed 220px column ===== */}
-          <div className="md:sticky md:top-16 md:self-start flex flex-col items-center gap-3">
-            {/* QR - capped at 200px */}
-            <div className="w-full max-w-[360px] aspect-square rounded-lg bg-muted/20 border border-border/20 flex items-center justify-center p-3">
+          {/* ===== RIGHT: QR preview ===== */}
+          <div className="md:sticky md:top-20 md:self-start flex flex-col items-center gap-3">
+            <div className="w-[200px] h-[200px] md:w-full md:max-w-[360px] md:aspect-square rounded-lg bg-muted/20 border border-border/20 flex items-center justify-center p-3">
               {qrDataUrl ? (
                 <img src={qrDataUrl} alt="QR Code" className="w-full h-full object-contain" />
               ) : (
@@ -307,7 +330,7 @@ export default function QRGenerator() {
 
             {/* Download */}
             {qrDataUrl && (
-              <div className="flex items-center gap-1.5 w-full max-w-[360px]">
+              <div className="flex items-center gap-1.5 w-[200px] md:w-full md:max-w-[360px]">
                 <Button size="sm" className="flex-grow gap-1.5 text-xs h-8" onClick={() => dl("png")}>
                   <DownloadIcon className="w-3 h-3" />PNG
                 </Button>
