@@ -172,11 +172,6 @@ export default function ApiReferencePage() {
         </div>
       </main>
 
-      <footer className="border-t border-border/30 mt-auto">
-        <div className="flex items-center justify-between px-5 py-2.5 max-w-6xl mx-auto text-[9px] uppercase tracking-widest text-muted-foreground/30">
-          <span>QRzap</span><span>Open Source</span>
-        </div>
-      </footer>
     </div>
   );
 }

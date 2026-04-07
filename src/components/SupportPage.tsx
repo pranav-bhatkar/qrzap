@@ -104,13 +104,6 @@ export default function SupportPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border mt-12">
-        <div className="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between text-xs text-muted-foreground">
-          <span>QRzap / Free QR Code Generator</span>
-          <span>No data stored. Everything runs in your browser.</span>
-        </div>
-      </footer>
     </div>
   );
 }
