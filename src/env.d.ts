@@ -1,9 +1,11 @@
 /// <reference types="astro/client" />
 
-import type { PostHog } from "posthog-js";
-
 declare global {
   interface Window {
-    posthog?: PostHog;
+    posthog?: {
+      capture: (event: string, properties?: Record<string, unknown>) => void;
+    };
   }
 }
+
+export {};
