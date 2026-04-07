@@ -163,9 +163,9 @@ function showHelp() {
   ${pc.dim("Free QR code generator — CLI, MCP server, REST API")}
 
   ${pc.bold("Usage:")}
-    ${pc.cyan("qrzap-mcp")}                    Start MCP server (for AI agents)
-    ${pc.cyan("qrzap-mcp interactive")}         Interactive QR code generator
-    ${pc.cyan("qrzap-mcp generate")} ${pc.dim("<options>")}  Generate QR code directly
+    ${pc.cyan("qrzap")}                    Start MCP server (for AI agents)
+    ${pc.cyan("qrzap interactive")}         Interactive QR code generator
+    ${pc.cyan("qrzap generate")} ${pc.dim("<options>")}  Generate QR code directly
 
   ${pc.bold("Commands:")}
     ${pc.cyan("interactive")}  ${pc.dim("i")}    Interactive mode with prompts
@@ -187,10 +187,10 @@ function showHelp() {
     ${pc.dim("--output")}     Output file path (default: qr.png/qr.svg)
 
   ${pc.bold("Examples:")}
-    ${pc.dim("$")} qrzap-mcp i
-    ${pc.dim("$")} qrzap-mcp g --type url --url https://example.com
-    ${pc.dim("$")} qrzap-mcp g --type wifi --ssid MyNetwork --password secret --format png
-    ${pc.dim("$")} qrzap-mcp g --type phone --phone +1234567890 --format svg --output contact.svg
+    ${pc.dim("$")} qrzap i
+    ${pc.dim("$")} qrzap g --type url --url https://example.com
+    ${pc.dim("$")} qrzap g --type wifi --ssid MyNetwork --password secret --format png
+    ${pc.dim("$")} qrzap g --type phone --phone +1234567890 --format svg --output contact.svg
 
   ${pc.dim("Docs:")} https://qrzap.fun/docs
   ${pc.dim("GitHub:")} https://github.com/pranav-bhatkar/qrzap
@@ -248,7 +248,7 @@ if (!command || command === "server" || command === "s") {
 } else if (command === "help" || command === "--help" || command === "-h") {
   showHelp();
 } else if (command === "version" || command === "--version" || command === "-v") {
-  console.log(`qrzap-mcp v${VERSION}`);
+  console.log(`qrzap v${VERSION}`);
 } else {
   console.error(pc.red(`Unknown command: ${command}`));
   showHelp();

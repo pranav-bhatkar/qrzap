@@ -1,4 +1,4 @@
-# qrzap-mcp
+# qrzap
 
 MCP server for generating QR codes. Supports URL, WiFi, phone, email, SMS, vCard, and plain text.
 
@@ -8,7 +8,7 @@ One tool. Seven QR types. Zero config.
 
 **Claude Code**
 ```bash
-claude mcp add qrzap -- npx qrzap-mcp@latest
+claude mcp add qrzap -- npx qrzap@latest
 ```
 
 **Claude Desktop / Cursor / VS Code**
@@ -17,7 +17,7 @@ claude mcp add qrzap -- npx qrzap-mcp@latest
   "mcpServers": {
     "qrzap": {
       "command": "npx",
-      "args": ["qrzap-mcp@latest"]
+      "args": ["qrzap@latest"]
     }
   }
 }

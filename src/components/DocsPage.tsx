@@ -108,7 +108,7 @@ export default function DocsPage() {
               <div className="space-y-3">
                 <div>
                   <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50 mb-1.5 font-medium">Claude Code</p>
-                  <Code>{`claude mcp add qrzap -- npx qrzap-mcp@latest`}</Code>
+                  <Code>{`claude mcp add qrzap -- npx qrzap@latest`}</Code>
                 </div>
                 <div>
                   <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50 mb-1.5 font-medium">Claude Desktop / Cursor / VS Code</p>
@@ -116,7 +116,7 @@ export default function DocsPage() {
   "mcpServers": {
     "qrzap": {
       "command": "npx",
-      "args": ["qrzap-mcp@latest"]
+      "args": ["qrzap@latest"]
     }
   }
 }`}</Code>

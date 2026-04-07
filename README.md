@@ -4,13 +4,13 @@ Free, open-source QR code generator with a web UI, REST API, and MCP server.
 
 Supports URL, WiFi, phone, email, SMS, vCard, and plain text.
 
-**[qrzap.fun](https://qrzap.fun)** | **[Docs](https://qrzap.fun/docs)** | **[API Reference](https://qrzap.fun/docs/reference)** | **[npm](https://www.npmjs.com/package/qrzap-mcp)**
+**[qrzap.fun](https://qrzap.fun)** | **[Docs](https://qrzap.fun/docs)** | **[API Reference](https://qrzap.fun/docs/reference)** | **[npm](https://www.npmjs.com/package/qrzap)**
 
 ## Features
 
 - **Web UI** - Generate and download QR codes instantly. Customize colors, size, error correction.
 - **REST API** - `GET /api/generate?type=url&url=...` returns SVG. No API key, CORS enabled.
-- **MCP Server** - `npx qrzap-mcp` adds QR generation to any AI agent. Works with Claude, Cursor, VS Code.
+- **MCP Server** - `npx qrzap` adds QR generation to any AI agent. Works with Claude, Cursor, VS Code.
 - **7 QR types** - URL, WiFi, phone, email, SMS, vCard, text. Structured params (pass `ssid` and `password`, not raw WiFi strings).
 - **Download formats** - PNG, SVG, JPEG, WebP from the web UI.
 - **Privacy** - Everything runs client-side. No data stored. No tracking.
@@ -21,14 +21,14 @@ One command to add QR code generation to any AI client:
 
 ```bash
 # Claude Code
-claude mcp add qrzap -- npx qrzap-mcp@latest
+claude mcp add qrzap -- npx qrzap@latest
 
 # Claude Desktop / Cursor / VS Code (add to config JSON)
 {
   "mcpServers": {
     "qrzap": {
       "command": "npx",
-      "args": ["qrzap-mcp@latest"]
+      "args": ["qrzap@latest"]
     }
   }
 }
