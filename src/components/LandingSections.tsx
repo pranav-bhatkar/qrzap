@@ -67,7 +67,7 @@ function TypeWriter({ text, speed = 40 }: { text: string; speed?: number }) {
 function Section({ id, children, className = "" }: { id: string; children: React.ReactNode; className?: string }) {
   return (
     <section id={id} className={`py-20 ${className}`}>
-      <div className="max-w-6xl mx-auto px-5">{children}</div>
+      <div className="max-w-6xl mx-auto px-4 md:px-8 lg:px-12">{children}</div>
     </section>
   );
 }
@@ -167,9 +167,9 @@ function APIPlayground() {
         No API key needed. Just a URL that returns an SVG image. Use it anywhere.
       </p>
 
-      <div className="grid md:grid-cols-[1fr_280px] gap-8 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_240px] gap-8 items-start">
         {/* Builder */}
-        <div className="space-y-4">
+        <div className="space-y-4 min-w-0">
           <div className="flex gap-1">
             {[
               { id: "url", label: "URL", Icon: LinkIcon },
@@ -224,7 +224,7 @@ function APIPlayground() {
               <CopyBtn text={apiUrl} />
             </div>
             <div className="p-4 overflow-x-auto">
-              <code className="text-xs font-mono text-sky-400 break-all">{apiUrl}</code>
+              <code className="text-[11px] font-mono text-sky-400 break-all whitespace-pre-wrap">{apiUrl}</code>
             </div>
           </div>
 
@@ -234,13 +234,13 @@ function APIPlayground() {
               <span className="text-[10px] text-muted-foreground/40">HTML Embed</span>
               <CopyBtn text={`<img src="${apiUrl}" alt="QR Code" width="200" />`} />
             </div>
-            <pre className="p-4 text-xs font-mono text-emerald-400 overflow-x-auto">{`<img src="${apiUrl}" alt="QR Code" width="200" />`}</pre>
+            <pre className="p-4 text-[11px] font-mono text-emerald-400 overflow-x-auto whitespace-pre-wrap break-all">{`<img src="${apiUrl}" alt="QR Code" width="200" />`}</pre>
           </div>
         </div>
 
         {/* Live QR preview */}
         <div className="md:sticky md:top-20 flex flex-col items-center gap-3">
-          <div className="w-full aspect-square max-w-[240px] rounded-xl bg-muted/10 border border-border/20 flex items-center justify-center p-4">
+          <div className="w-[180px] h-[180px] md:w-full md:aspect-square md:max-w-[240px] rounded-xl bg-muted/10 border border-border/20 flex items-center justify-center p-4">
             {hasData ? (
               <img src={apiUrl} alt="QR Preview" className="w-full h-full object-contain" />
             ) : (
